@@ -8,11 +8,11 @@
     <parent>
         <groupId>it.antoniopetricca.maven.plugins</groupId>
         <artifactId>maven-filemerger-pom</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
 
     <artifactId>maven-filemerger-tester</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 
     <packaging>jar</packaging>
 
@@ -21,7 +21,7 @@
             <plugin>
                 <groupId>it.antoniopetricca.maven.plugins</groupId>
                 <artifactId>maven-filemerger-plugin</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>0.0.1</version>
                 <executions>
                     <execution>
                         <goals>
