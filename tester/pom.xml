@@ -11,6 +11,8 @@
         <version>0.0.1</version>
     </parent>
 
+    <name>File Merger maven tester</name>
+
     <artifactId>filemerger-maven-tester</artifactId>
     <version>0.0.1</version>
 
