@@ -94,7 +94,11 @@
                 </executions>
             </plugin>
 
-            <!--<plugin>
+            <plugin>
+                <!--
+                    https://central.sonatype.org/publish/requirements/gpg/#listing-keys
+                -->
+
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>3.1.0</version>
@@ -107,24 +111,8 @@
                         <phase>verify</phase>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
         </plugins>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.9.0</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.4.5</version>
-            </plugin>
-        </plugins>
-    </reporting>
 
 </project>
