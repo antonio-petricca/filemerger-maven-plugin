@@ -3,17 +3,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>it.antoniopetricca.maven.plugins</groupId>
-        <artifactId>filemerger</artifactId>
+        <artifactId>maven-filemerger-pom</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>it.antoniopetricca.maven.plugins.filemerger</groupId>
-    <artifactId>tester</artifactId>
+    <artifactId>maven-filemerger-tester</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <packaging>jar</packaging>
@@ -21,9 +19,16 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>it.antoniopetricca.maven.plugins.filemerger</groupId>
-                <artifactId>plugin</artifactId>
+                <groupId>it.antoniopetricca.maven.plugins</groupId>
+                <artifactId>maven-filemerger-plugin</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>file-merge</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

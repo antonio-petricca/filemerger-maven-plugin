@@ -6,20 +6,37 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Maven File Merger plugin</name>
+
+    <description>Loads and merges text/code/configuration external files into another one by placeholders.</description>
+    <url>https://github.com/chonton/readfiles-maven-plugin</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Antonio Petricca</name>
+            <email>antonio.petricca@gmail.com</email>
+            <url>https://www.linkedin.com/in/antoniopetricca/</url>
+        </developer>
+    </developers>
+
     <parent>
         <groupId>it.antoniopetricca.maven.plugins</groupId>
-        <artifactId>filemerger</artifactId>
+        <artifactId>maven-filemerger-pom</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>it.antoniopetricca.maven.plugins.filemerger</groupId>
-    <artifactId>plugin</artifactId>
+    <artifactId>maven-filemerger-plugin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <packaging>maven-plugin</packaging>
-
-    <name>Maven File Merger mojo plugin</name>
-    <url>http://maven.apache.org</url>
 
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -32,16 +49,19 @@
             <artifactId>maven-plugin-api</artifactId>
             <version>3.9.4</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
             <version>3.9.0</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-project</artifactId>
             <version>2.2.1</version>
         </dependency>
     </dependencies>
+
 </project>

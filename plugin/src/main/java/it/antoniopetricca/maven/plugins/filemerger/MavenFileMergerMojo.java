@@ -16,12 +16,11 @@ import java.util.List;
 
 @Mojo(
     defaultPhase = LifecyclePhase.PROCESS_RESOURCES,
-    name         = "file-merger"
-
+    name         = "file-merge"
 )
 public class MavenFileMergerMojo extends AbstractMojo {
 
-    private final  Log log = this.getLog();
+    private final Log log = this.getLog();
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     MavenProject project;
@@ -37,7 +36,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         List<Dependency> dependencies    = project.getDependencies();
         long             numDependencies = dependencies.size();
 
-        getLog().info("Number of dependencies: " + numDependencies);
+        log.info("Number of dependencies: " + numDependencies);
     }
 
 }
