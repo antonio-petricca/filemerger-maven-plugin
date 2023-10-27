@@ -1,4 +1,4 @@
-package it.antoniopetricca.maven.plugins.filemerger;
+package hosting.io.github.antoniopetricca.maven.plugins.filemerger;
 
 // https://www.baeldung.com/maven-plugin
 
@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -126,8 +125,6 @@ public class MavenFileMergerMojo extends AbstractMojo {
             targetFile.toPath(),
             targetFileContent.getBytes(charset)
         );
-
-        log.info("Done.");
     }
 
     @Override
@@ -146,6 +143,8 @@ public class MavenFileMergerMojo extends AbstractMojo {
                 throw new RuntimeException(exception);
             }
         }
+
+        log.info("Done.");
     }
 
 }

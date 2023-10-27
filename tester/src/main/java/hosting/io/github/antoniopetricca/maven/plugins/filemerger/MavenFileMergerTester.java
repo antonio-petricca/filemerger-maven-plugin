@@ -1,4 +1,4 @@
-package it.antoniopetricca.maven.plugins.filemerger;
+package hosting.io.github.antoniopetricca.maven.plugins.filemerger;
 
 public class MavenFileMergerTester {
 
