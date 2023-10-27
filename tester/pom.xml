@@ -6,14 +6,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.github.antonio-petricca.maven.plugins</groupId>
-        <artifactId>filemerger-maven-pom</artifactId>
+        <groupId>io.github.antonio-petricca</groupId>
+        <artifactId>filemerger-maven-plugin-pom</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <name>File Merger maven tester</name>
+    <name>File Merger maven plugin tester</name>
 
-    <artifactId>filemerger-maven-tester</artifactId>
+    <artifactId>filemerger-maven-plugin-tester</artifactId>
     <version>0.0.1</version>
 
     <packaging>jar</packaging>
@@ -21,7 +21,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>io.github.antonio-petricca.maven.plugins</groupId>
+                <groupId>io.github.antonio-petricca</groupId>
                 <artifactId>filemerger-maven-plugin</artifactId>
                 <version>0.0.1</version>
                 <executions>

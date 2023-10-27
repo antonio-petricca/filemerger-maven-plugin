@@ -34,8 +34,8 @@
     </developers>
 
     <parent>
-        <groupId>io.github.antonio-petricca.maven.plugins</groupId>
-        <artifactId>filemerger-maven-pom</artifactId>
+        <groupId>io.github.antonio-petricca</groupId>
+        <artifactId>filemerger-maven-plugin-pom</artifactId>
         <version>0.0.1</version>
     </parent>
 
