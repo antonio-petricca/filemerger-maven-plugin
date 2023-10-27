@@ -6,7 +6,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Maven File Merger plugin</name>
+    <name>File merger maven plugin</name>
 
     <description>Loads and merges text/code/configuration external files into another one by placeholders.</description>
     <url>https://github.com/chonton/readfiles-maven-plugin</url>
@@ -29,11 +29,11 @@
 
     <parent>
         <groupId>it.antoniopetricca.maven.plugins</groupId>
-        <artifactId>maven-filemerger-pom</artifactId>
+        <artifactId>filemerger-maven-pom</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>maven-filemerger-plugin</artifactId>
+    <artifactId>filemerger-maven-plugin</artifactId>
     <version>0.0.1</version>
 
     <packaging>maven-plugin</packaging>

@@ -1,4 +1,4 @@
-# maven-filemerger-plugin
+# filemerger-maven-plugin
 
 A plugin to load and merge text/code/configuration external files into another one by placeholders.
 

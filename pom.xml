@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>it.antoniopetricca.maven.plugins</groupId>
-    <artifactId>maven-filemerger-pom</artifactId>
+    <artifactId>filemerger-maven-pom</artifactId>
     <version>0.0.1</version>
 
     <packaging>pom</packaging>
