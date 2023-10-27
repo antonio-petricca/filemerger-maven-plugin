@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,13 +31,19 @@ public class MavenFileMergerMojo extends AbstractMojo {
     @Parameter(required = true)
     private TargetFileConfiguration[] targetFiles;
 
+    private byte[] getFileBytes(File file)
+        throws IOException
+    {
+        return Files.readAllBytes(
+            file.toPath()
+        );
+    }
+
     private String getFileContent(File file, Charset charset)
         throws IOException
     {
         return new String(
-            Files.readAllBytes(
-                file.toPath()
-            ),
+            getFileBytes(file),
             charset
         );
     }
@@ -65,11 +72,12 @@ public class MavenFileMergerMojo extends AbstractMojo {
         );
 
         String  targetFileContent = getFileContent(targetFile, charset);
-        Integer indentation       = targetFileConfiguration.getIndentation();
+
+        Integer indentationAmount = targetFileConfiguration.getIndentation();
         String  indentationString = null;
 
-        if (indentation > 0) {
-            indentationString = StringUtils.leftPad("", indentation, " ");
+        if (indentationAmount > 0) {
+            indentationString = StringUtils.leftPad("", indentationAmount, " ");
         }
 
         for (SourceFileConfiguration sourceFileConfiguration : targetFileConfiguration.getSourceFiles()) {
@@ -82,16 +90,28 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
             String sourceFileContent;
 
-            if (null != indentationString) {
-                List<String> sourceFileLines   = getFileLines(sourceFile, charset);
-                final String streamIndentation = indentationString;
+            if (sourceFileConfiguration.isBinary())  {
+                byte[] sourceFileBytes = getFileBytes(sourceFile);
 
-                sourceFileContent = sourceFileLines
-                    .stream()
-                    .map(line -> (streamIndentation + line))
-                    .collect(Collectors.joining("\n"));
+                sourceFileContent = Base64
+                    .getEncoder()
+                    .encodeToString(sourceFileBytes);
+
+                if (null != indentationString) {
+                    sourceFileContent = (indentationString + sourceFileContent);
+                }
             } else {
-                sourceFileContent = getFileContent(sourceFile, charset);
+                if (null != indentationString) {
+                    List<String> sourceFileLines   = getFileLines(sourceFile, charset);
+                    final String streamIndentation = indentationString;
+
+                    sourceFileContent = sourceFileLines
+                        .stream()
+                        .map(line -> (streamIndentation + line))
+                        .collect(Collectors.joining("\n"));
+                } else {
+                    sourceFileContent = getFileContent(sourceFile, charset);
+                }
             }
 
             targetFileContent = targetFileContent.replaceAll(

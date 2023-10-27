@@ -36,10 +36,12 @@
                                     <sourceFiles>
                                         <sourceFile>
                                             <file>src/main/assets/source-file-1.txt</file>
+                                            <isBinary>false</isBinary>
                                             <placeholder>@SOURCE_FILE_1@</placeholder>
                                         </sourceFile>
                                         <sourceFile>
                                             <file>src/main/assets/source-file-2.txt</file>
+                                            <isBinary>true</isBinary>
                                             <placeholder>@SOURCE_FILE_2@</placeholder>
                                         </sourceFile>
                                     </sourceFiles>

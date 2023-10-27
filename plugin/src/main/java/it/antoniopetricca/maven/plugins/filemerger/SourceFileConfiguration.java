@@ -4,8 +4,9 @@ import java.io.File;
 
 public class SourceFileConfiguration {
 
-    private File   file;
-    private String placeholder;
+    private File    file;
+    private boolean isBinary;
+    private String  placeholder;
 
     public File getFile() {
         return file;
@@ -13,6 +14,10 @@ public class SourceFileConfiguration {
 
     public String getPlaceholder() {
         return placeholder;
+    }
+
+    public boolean isBinary() {
+        return isBinary;
     }
 
 }
