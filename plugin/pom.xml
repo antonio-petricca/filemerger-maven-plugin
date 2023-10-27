@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-    https://central.sonatype.org/publish/requirements/gpg/#listing-keys
     https://central.sonatype.org/publish/#individual-projects-open-source-software-repository-hosting-ossrh
+    https://central.sonatype.org/publish/publish-maven/#deployment
+    https://central.sonatype.org/publish/requirements/gpg/#listing-keys
     https://issues.sonatype.org/browse/OSSRH-96209?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
 -->
 
@@ -74,6 +75,13 @@
         <profile>
             <id>deploy</id>
 
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+
             <build>
                 <plugins>
                     <plugin>
@@ -94,6 +102,14 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
                         <version>3.3.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
 
                     <plugin>
@@ -118,7 +134,7 @@
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
