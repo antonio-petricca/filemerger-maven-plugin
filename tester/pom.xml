@@ -27,9 +27,36 @@
                         <goals>
                             <goal>file-merge</goal>
                         </goals>
+                        <configuration>
+                           <targetFiles>
+                                <targetFile>
+                                    <charset>UTF-8</charset>
+                                    <file>${project.build.outputDirectory}/tester-resource.txt</file>
+                                    <indentation>4</indentation>
+                                    <sourceFiles>
+                                        <sourceFile>
+                                            <file>src/main/assets/source-file-1.txt</file>
+                                            <placeholder>@SOURCE_FILE_1@</placeholder>
+                                        </sourceFile>
+                                        <sourceFile>
+                                            <file>src/main/assets/source-file-2.txt</file>
+                                            <placeholder>@SOURCE_FILE_2@</placeholder>
+                                        </sourceFile>
+                                    </sourceFiles>
+                                </targetFile>
+                           </targetFiles>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
+
 </project>

@@ -1,0 +1,14 @@
+Project: ${groupId}.${artifactId}
+Version: ${project.version}
+
+------
+File 1
+------
+
+@SOURCE_FILE_1@
+
+------
+File 2
+------
+
+@SOURCE_FILE_2@
