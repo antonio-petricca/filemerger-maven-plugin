@@ -1,4 +1,4 @@
-package hosting.io.github.antoniopetricca.maven.plugins.filemerger;
+package io.github.antoniopetricca.maven.plugins.filemerger;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;

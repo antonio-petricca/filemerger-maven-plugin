@@ -6,7 +6,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>hosting.io.github.antonio-petricca.maven.plugins</groupId>
+    <groupId>io.github.antonio-petricca.maven.plugins</groupId>
     <artifactId>filemerger-maven-pom</artifactId>
     <version>0.0.1</version>
 

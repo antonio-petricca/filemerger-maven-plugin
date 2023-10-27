@@ -1,4 +1,4 @@
-package hosting.io.github.antoniopetricca.maven.plugins.filemerger;
+package io.github.antoniopetricca.maven.plugins.filemerger;
 
 // https://www.baeldung.com/maven-plugin
 
