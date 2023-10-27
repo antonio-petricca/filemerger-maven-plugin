@@ -4,8 +4,8 @@ import java.io.File;
 
 public class SourceFileConfiguration {
 
+    private boolean encode;
     private File    file;
-    private boolean isBinary;
     private String  placeholder;
 
     public File getFile() {
@@ -16,8 +16,8 @@ public class SourceFileConfiguration {
         return placeholder;
     }
 
-    public boolean isBinary() {
-        return isBinary;
+    public boolean isEncode() {
+        return encode;
     }
 
 }

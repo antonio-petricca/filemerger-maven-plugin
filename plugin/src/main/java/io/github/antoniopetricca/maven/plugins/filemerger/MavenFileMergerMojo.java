@@ -89,7 +89,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
             String sourceFileContent;
 
-            if (sourceFileConfiguration.isBinary())  {
+            if (sourceFileConfiguration.isEncode())  {
                 byte[] sourceFileBytes = getFileBytes(sourceFile);
 
                 sourceFileContent = Base64
