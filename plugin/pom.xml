@@ -37,11 +37,11 @@
     <parent>
         <groupId>io.github.antonio-petricca</groupId>
         <artifactId>filemerger-maven-plugin-pom</artifactId>
-        <version>0.0.2</version>
+        <version>0.0.3</version>
     </parent>
 
     <artifactId>filemerger-maven-plugin</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 
     <packaging>maven-plugin</packaging>
 

@@ -8,13 +8,13 @@
     <parent>
         <groupId>io.github.antonio-petricca</groupId>
         <artifactId>filemerger-maven-plugin-pom</artifactId>
-        <version>0.0.2</version>
+        <version>0.0.3</version>
     </parent>
 
     <name>File Merger maven plugin tester</name>
 
     <artifactId>filemerger-maven-plugin-tester</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 
     <packaging>jar</packaging>
 
@@ -23,7 +23,7 @@
             <plugin>
                 <groupId>io.github.antonio-petricca</groupId>
                 <artifactId>filemerger-maven-plugin</artifactId>
-                <version>0.0.2</version>
+                <version>0.0.3</version>
                 <executions>
                     <execution>
                         <goals>
