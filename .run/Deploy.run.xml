@@ -12,7 +12,6 @@
           <option name="goals">
             <list>
               <option value="clean" />
-              <option value="install" />
               <option value="deploy" />
             </list>
           </option>

@@ -97,25 +97,19 @@
                             </execution>
                         </executions>
                     </plugin>
-
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
                         <version>3.3.0</version>
 
-                        <!--
-                            Commented to avoid "Presumably you have configured maven-source-plugn to execute twice times in your build. You have to configure a classifier for at least on of them.".
-
-                        -->
-
-                        <!-- <executions>
+                        <executions>
                             <execution>
                                 <id>attach-sources</id>
                                 <goals>
                                     <goal>jar-no-fork</goal>
                                 </goals>
                             </execution>
-                        </executions> -->
+                        </executions>
                     </plugin>
 
                     <plugin>
