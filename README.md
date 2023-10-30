@@ -1,6 +1,6 @@
 # filemerger-maven-plugin
 
-A plugin to load and merge text/code/configuration external files into another one by placeholders.
+A plugin to load and merge text/code/configuration/binary external files into another one by placeholders.
 
 The **Tester** module is a self explanatory example:
 
