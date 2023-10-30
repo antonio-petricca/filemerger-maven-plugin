@@ -6,17 +6,16 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: maven-ci
+name: ci
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
