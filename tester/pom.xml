@@ -5,16 +5,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>io.github.antonio-petricca</groupId>
-        <artifactId>filemerger-maven-plugin-pom</artifactId>
-        <version>1.0.0</version>
-    </parent>
-
     <name>File Merger maven plugin tester</name>
 
+    <groupId>io.github.antonio-petricca</groupId>
     <artifactId>filemerger-maven-plugin-tester</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <packaging>jar</packaging>
 
@@ -23,7 +18,7 @@
             <plugin>
                 <groupId>io.github.antonio-petricca</groupId>
                 <artifactId>filemerger-maven-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1</version>
                 <executions>
                     <execution>
                         <goals>
