@@ -3,6 +3,7 @@
 <!--
     https://central.sonatype.org/publish/#individual-projects-open-source-software-repository-hosting-ossrh
     https://central.sonatype.org/publish/publish-maven/#deployment
+    https://central.sonatype.org/publish/requirements/#sufficient-metadata
     https://central.sonatype.org/publish/requirements/gpg/#listing-keys
     https://issues.sonatype.org/browse/OSSRH-96209?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
 -->
@@ -16,7 +17,15 @@
     <name>File Merger maven plugin</name>
 
     <description>Loads and merges text/code/configuration external files into another one by placeholders.</description>
+
     <url>https://github.com/antonio-petricca/filemerger-maven-plugin</url>
+
+    <scm>
+        <connection>scm:git:https://github.com/antonio-petricca/filemerger-maven-plugin.git</connection>
+        <developerConnection>scm:git:https://github.com/antonio-petricca/filemerger-maven-plugin.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/antonio-petricca/filemerger-maven-plugin</url>
+    </scm>
 
     <licenses>
         <license>
