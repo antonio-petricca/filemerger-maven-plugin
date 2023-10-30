@@ -1,14 +1,26 @@
 Project: ${groupId}.${artifactId}
 Version: ${project.version}
 
-------
-File 1
-------
+-----------
+Lorem Ipsum
+-----------
 
-@SOURCE_FILE_1@
+@LOREM_IPSUM@
 
-------
-File 2
-------
+--------------
+Gregorio Samsa
+--------------
 
-@SOURCE_FILE_2@
+@GREGORIO_SAMSA@
+
+----------
+Empty file
+----------
+
+@EMPTY_FILE@
+
+---------------------
+Binary (encoded) file
+---------------------
+
+@GITHUB_LOGO@

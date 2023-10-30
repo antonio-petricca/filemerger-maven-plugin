@@ -39,16 +39,30 @@
                                         <sourceFile>
                                             <charset>UTF-8</charset>
                                             <encode>false</encode>
-                                            <file>src/main/assets/source-file-1.txt</file>
+                                            <file>src/main/assets/lorem-ipsum.txt</file>
                                             <filtering>true</filtering>
-                                            <placeholder>@SOURCE_FILE_1@</placeholder>
+                                            <placeholder>@LOREM_IPSUM@</placeholder>
+                                        </sourceFile>
+                                        <sourceFile>
+                                            <charset>UTF-8</charset>
+                                            <encode>false</encode>
+                                            <file>src/main/assets/gregorio-samsa.txt</file>
+                                            <filtering>true</filtering>
+                                            <placeholder>@GREGORIO_SAMSA@</placeholder>
                                         </sourceFile>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
                                             <encode>true</encode>
-                                            <file>src/main/assets/source-file-2.txt</file>
+                                            <file>src/main/assets/empty-file.txt</file>
                                             <filtering>true</filtering>
-                                            <placeholder>@SOURCE_FILE_2@</placeholder>
+                                            <placeholder>@EMPTY_FILE@</placeholder>
+                                        </sourceFile>
+                                        <sourceFile>
+                                            <charset>UTF-8</charset>
+                                            <encode>true</encode>
+                                            <file>src/main/assets/github-logo.webp</file>
+                                            <filtering>true</filtering>
+                                            <placeholder>@GITHUB_LOGO@</placeholder>
                                         </sourceFile>
                                     </sourceFiles>
                                 </targetFile>
