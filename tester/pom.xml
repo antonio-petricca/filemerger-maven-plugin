@@ -37,13 +37,17 @@
                                     <indentation>4</indentation>
                                     <sourceFiles>
                                         <sourceFile>
+                                            <charset>UTF-8</charset>
                                             <encode>false</encode>
                                             <file>src/main/assets/source-file-1.txt</file>
+                                            <filtering>true</filtering>
                                             <placeholder>@SOURCE_FILE_1@</placeholder>
                                         </sourceFile>
                                         <sourceFile>
+                                            <charset>UTF-8</charset>
                                             <encode>true</encode>
                                             <file>src/main/assets/source-file-2.txt</file>
+                                            <filtering>true</filtering>
                                             <placeholder>@SOURCE_FILE_2@</placeholder>
                                         </sourceFile>
                                     </sourceFiles>

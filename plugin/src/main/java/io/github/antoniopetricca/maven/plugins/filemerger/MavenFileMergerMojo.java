@@ -3,16 +3,20 @@ package io.github.antoniopetricca.maven.plugins.filemerger;
 // https://www.baeldung.com/maven-plugin
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.filtering.DefaultMavenReaderFilter;
+import org.apache.maven.shared.filtering.MavenFilteringException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Base64;
@@ -27,8 +31,51 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
     private final Log log = this.getLog();
 
+    @Component(role = DefaultMavenReaderFilter.class)
+    protected DefaultMavenReaderFilter defaultMavenReaderFilter;
+
+    @Component(role = MavenProject.class)
+    MavenProject mavenProject;
+
+    @Component(role = MavenSession.class)
+    MavenSession mavenSession;
+
     @Parameter(required = true)
     private TargetFileConfiguration[] targetFiles;
+
+    String convertReaderToString(Reader reader) throws IOException {
+        StringWriter writer = new StringWriter();
+        char[]       buffer = new char[8192];
+
+        int charsRead;
+
+        while (
+            (charsRead = reader.read(buffer, 0, buffer.length)) != -1
+        ) {
+            writer.write(buffer, 0, charsRead);
+        }
+
+        return writer.toString();
+    }
+
+    private String filterFileContent(String content)
+        throws IOException, MavenFilteringException
+    {
+        log.info("Filtering...");
+
+        StringReader sourceReader  = new StringReader(content);
+
+        Reader targetReader = defaultMavenReaderFilter.filter(
+            sourceReader,
+            true,
+            mavenProject,
+            null,
+            false,
+            mavenSession
+        );
+
+        return convertReaderToString(targetReader);
+    }
 
     private byte[] getFileBytes(File file)
         throws IOException
@@ -57,7 +104,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
     }
 
     private void mergeTargetFile(TargetFileConfiguration targetFileConfiguration)
-        throws IOException
+        throws IOException, MavenFilteringException
     {
         File targetFile = targetFileConfiguration.getFile();
 
@@ -66,11 +113,11 @@ public class MavenFileMergerMojo extends AbstractMojo {
             targetFile.toString()
         ));
 
-        Charset charset = Charset.forName(
+        Charset targetCharset = Charset.forName(
             targetFileConfiguration.getCharset()
         );
 
-        String  targetFileContent = getFileContent(targetFile, charset);
+        String  targetFileContent = getFileContent(targetFile, targetCharset);
 
         Integer indentationAmount = targetFileConfiguration.getIndentation();
         String  indentationString = null;
@@ -90,7 +137,13 @@ public class MavenFileMergerMojo extends AbstractMojo {
             String sourceFileContent;
 
             if (sourceFileConfiguration.isEncode())  {
-                byte[] sourceFileBytes = getFileBytes(sourceFile);
+                sourceFileContent = getFileContent(sourceFile, targetCharset);
+
+                if (sourceFileConfiguration.isFiltering()) {
+                    sourceFileContent = filterFileContent(sourceFileContent);
+                }
+
+                byte[] sourceFileBytes = sourceFileContent.getBytes(targetCharset);
 
                 sourceFileContent = Base64
                     .getEncoder()
@@ -101,7 +154,11 @@ public class MavenFileMergerMojo extends AbstractMojo {
                 }
             } else {
                 if (null != indentationString) {
-                    List<String> sourceFileLines   = getFileLines(sourceFile, charset);
+                    Charset sourceCharset = Charset.forName(
+                        sourceFileConfiguration.getCharset()
+                    );
+
+                    List<String> sourceFileLines   = getFileLines(sourceFile, sourceCharset);
                     final String streamIndentation = indentationString;
 
                     sourceFileContent = sourceFileLines
@@ -109,11 +166,15 @@ public class MavenFileMergerMojo extends AbstractMojo {
                         .map(line -> (streamIndentation + line))
                         .collect(Collectors.joining("\n"));
                 } else {
-                    sourceFileContent = getFileContent(sourceFile, charset);
+                    sourceFileContent = getFileContent(sourceFile, targetCharset);
+                }
+
+                if (sourceFileConfiguration.isFiltering()) {
+                    sourceFileContent = filterFileContent(sourceFileContent);
                 }
             }
 
-            targetFileContent = targetFileContent.replaceAll(
+            targetFileContent = targetFileContent.replace(
                 sourceFileConfiguration.getPlaceholder(),
                 sourceFileContent
             );
@@ -121,9 +182,13 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
         log.info("Writing merged target file...");
 
+        if (targetFileConfiguration.isFiltering()) {
+            targetFileContent = filterFileContent(targetFileContent);
+        }
+
         Files.write(
             targetFile.toPath(),
-            targetFileContent.getBytes(charset)
+            targetFileContent.getBytes(targetCharset)
         );
     }
 
@@ -139,7 +204,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         for (TargetFileConfiguration targetFileConfiguration : targetFiles) {
             try {
                 mergeTargetFile(targetFileConfiguration);
-            } catch(IOException exception) {
+            } catch(IOException | MavenFilteringException exception) {
                 throw new RuntimeException(exception);
             }
         }
