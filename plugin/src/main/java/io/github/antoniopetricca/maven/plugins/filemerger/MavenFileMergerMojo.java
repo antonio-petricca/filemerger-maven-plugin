@@ -59,14 +59,14 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return writer.toString();
     }
 
-    private void ensureDestinationFile(File file)
+    private void ensureTargetFile(File file)
         throws IOException
     {
         File path = file.getParentFile();
 
         if (!path.exists()) {
             log.info(String.format(
-                "Creating destination folder \"%s\"...",
+                "Creating target folder \"%s\"...",
                 path
             ));
 
@@ -77,7 +77,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
         if (!file.exists()) {
             log.info(String.format(
-                "Creating destination file \"%s\"...",
+                "Creating target file \"%s\"...",
                 file
             ));
 
@@ -208,42 +208,42 @@ public class MavenFileMergerMojo extends AbstractMojo {
         throws IOException, MavenFilteringException
     {
         Properties propertiesBackup = setProperties(targetFileConfiguration);
-        File       destinationFile  = targetFileConfiguration.getDestination();
-        File       templateFile     = targetFileConfiguration.getTemplate();
+        File       targetFile       = targetFileConfiguration.getTargetFile();
+        File       templateFile     = targetFileConfiguration.getTemplateFile();
 
-        if (null == destinationFile) {
-            destinationFile = templateFile;
+        if (null == targetFile) {
+            targetFile = templateFile;
         }
 
         log.info(String.format(
             "Merging template file \"%s\" into \"%s\"...",
             templateFile,
-            destinationFile
+            targetFile
         ));
 
-        ensureDestinationFile(destinationFile);
+        ensureTargetFile(targetFile);
 
-        Charset destinationCharset     = getCharset(targetFileConfiguration);
-        String  destinationFileContent = getFileContent(templateFile, destinationCharset);
-        String  indentation            = getIndentation(targetFileConfiguration);
+        Charset targetCharset     = getCharset(targetFileConfiguration);
+        String  targetFileContent = getFileContent(templateFile, targetCharset);
+        String  indentation       = getIndentation(targetFileConfiguration);
 
         for (SourceFileConfiguration sourceFileConfiguration : targetFileConfiguration.getSourceFiles()) {
-            destinationFileContent = mergeSourceFile(
+            targetFileContent = mergeSourceFile(
                 sourceFileConfiguration,
-                destinationFileContent,
+                targetFileContent,
                 indentation
             );
         }
 
-        log.info("Writing merged destination file...");
+        log.info("Writing target file...");
 
         if (targetFileConfiguration.isFiltering()) {
-            destinationFileContent = filterFileContent(destinationFileContent);
+            targetFileContent = filterFileContent(targetFileContent);
         }
 
         Files.write(
-            destinationFile.toPath(),
-            destinationFileContent.getBytes(destinationCharset)
+            targetFile.toPath(),
+            targetFileContent.getBytes(targetCharset)
         );
 
         setProperties(propertiesBackup);

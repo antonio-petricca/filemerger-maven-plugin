@@ -35,8 +35,8 @@
                                     <charset>UTF-8</charset>
                                     <indentation>4</indentation>
 
-                                    <template>${assets-path}/target-file-template.txt</template>
-                                    <destination>${project.build.outputDirectory}/target-file.txt</destination>
+                                    <targetFile>${project.build.outputDirectory}/target-file.txt</targetFile>
+                                    <templateFile>${assets-path}/template-file.txt</templateFile>
 
                                     <properties>
                                         <plugin.tester.environment>development</plugin.tester.environment>
