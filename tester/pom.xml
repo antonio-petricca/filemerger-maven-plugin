@@ -13,6 +13,11 @@
 
     <packaging>jar</packaging>
 
+    <properties>
+        <assets-path>src/main/assets</assets-path>
+        <source-files-path>${assets-path}/source-files</source-files-path>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -28,34 +33,41 @@
                            <targetFiles>
                                 <targetFile>
                                     <charset>UTF-8</charset>
-                                    <file>${project.build.outputDirectory}/tester-resource.txt</file>
                                     <indentation>4</indentation>
+
+                                    <template>${assets-path}/target-file-template.txt</template>
+                                    <destination>${project.build.outputDirectory}/target-file.txt</destination>
+
+                                    <properties>
+                                        <plugin.tester.environment>development</plugin.tester.environment>
+                                    </properties>
+
                                     <sourceFiles>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
                                             <encode>false</encode>
-                                            <file>src/main/assets/lorem-ipsum.txt</file>
+                                            <file>${source-files-path}/lorem-ipsum.txt</file>
                                             <filtering>true</filtering>
                                             <placeholder>@LOREM_IPSUM@</placeholder>
                                         </sourceFile>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
                                             <encode>false</encode>
-                                            <file>src/main/assets/gregorio-samsa.txt</file>
+                                            <file>${source-files-path}/gregorio-samsa.txt</file>
                                             <filtering>true</filtering>
                                             <placeholder>@GREGORIO_SAMSA@</placeholder>
                                         </sourceFile>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
                                             <encode>true</encode>
-                                            <file>src/main/assets/empty-file.txt</file>
+                                            <file>${source-files-path}/empty-file.txt</file>
                                             <filtering>true</filtering>
                                             <placeholder>@EMPTY_FILE@</placeholder>
                                         </sourceFile>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
                                             <encode>true</encode>
-                                            <file>src/main/assets/github-logo.webp</file>
+                                            <file>${source-files-path}/github-logo.webp</file>
                                             <filtering>true</filtering>
                                             <placeholder>@GITHUB_LOGO@</placeholder>
                                         </sourceFile>

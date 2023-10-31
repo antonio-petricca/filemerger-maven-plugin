@@ -3,6 +3,7 @@ https://it.lipsum.com
 ---------------------
 
 Filtered Maven Property: "${project.groupId}.${project.artifactId}:${project.version}".
+Custom property        : "${plugin.tester.environment}"
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id lacus id est gravida mattis. Phasellus convallis est in libero efficitur tempor. Pellentesque eget mollis massa. Nulla facilisi. Donec condimentum lectus lectus, vel congue urna tempor ut. Nulla vel sodales felis. Nullam eu ligula convallis, hendrerit sapien quis, auctor quam. Praesent eget bibendum ligula, et consequat sem. Cras a pharetra mauris. Nullam id porta erat. Morbi posuere finibus nulla, dapibus ultricies elit pretium ac. Phasellus condimentum interdum tristique. Vestibulum eget bibendum ante. Donec porttitor viverra urna sit amet faucibus. Aenean nisl ligula, euismod ut sem volutpat, tempor tincidunt lorem.
 

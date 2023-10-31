@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Base64;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 @Mojo(
@@ -58,6 +59,32 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return writer.toString();
     }
 
+    private void ensureDestinationFile(File file)
+        throws IOException
+    {
+        File path = file.getParentFile();
+
+        if (!path.exists()) {
+            log.info(String.format(
+                "Creating destination folder \"%s\"...",
+                path
+            ));
+
+            Files.createDirectories(
+                path.toPath()
+            );
+        }
+
+        if (!file.exists()) {
+            log.info(String.format(
+                "Creating destination file \"%s\"...",
+                file
+            ));
+
+            file.createNewFile();
+        }
+    }
+
     private String filterFileContent(String content)
         throws IOException, MavenFilteringException
     {
@@ -75,6 +102,12 @@ public class MavenFileMergerMojo extends AbstractMojo {
         );
 
         return convertReaderToString(targetReader);
+    }
+
+    private Charset getCharset(AbstractFileConfiguration fileConfiguration) {
+        return Charset.forName(
+            fileConfiguration.getCharset()
+        );
     }
 
     private byte[] getFileBytes(File file)
@@ -103,6 +136,17 @@ public class MavenFileMergerMojo extends AbstractMojo {
         );
     }
 
+    private String getIndentation(TargetFileConfiguration targetFileConfiguration) {
+        Integer indentationAmount = targetFileConfiguration.getIndentation();
+        String  indentationString = null;
+
+        if (indentationAmount > 0) {
+            indentationString = StringUtils.leftPad("", indentationAmount, " ");
+        }
+
+        return indentationString;
+    }
+
     private String mergeSourceFile(
         SourceFileConfiguration sourceFileConfiguration,
         String                  targetFileContent,
@@ -110,11 +154,8 @@ public class MavenFileMergerMojo extends AbstractMojo {
     )
         throws IOException, MavenFilteringException
     {
-        Charset sourceCharset = Charset.forName(
-            sourceFileConfiguration.getCharset()
-        );
-
-        File sourceFile = sourceFileConfiguration.getFile();
+        Charset sourceCharset = getCharset(sourceFileConfiguration);
+        File    sourceFile    = sourceFileConfiguration.getFile();
 
         log.info(String.format(
             "Merging source file \"%s\"...",
@@ -166,44 +207,69 @@ public class MavenFileMergerMojo extends AbstractMojo {
     private void mergeTargetFile(TargetFileConfiguration targetFileConfiguration)
         throws IOException, MavenFilteringException
     {
-        File targetFile = targetFileConfiguration.getFile();
+        Properties propertiesBackup = setProperties(targetFileConfiguration);
+        File       destinationFile  = targetFileConfiguration.getDestination();
+        File       templateFile     = targetFileConfiguration.getTemplate();
 
-        log.info(String.format(
-            "Merging target file \"%s\"...",
-            targetFile.toString()
-        ));
-
-        Charset targetCharset = Charset.forName(
-            targetFileConfiguration.getCharset()
-        );
-
-        String  targetFileContent = getFileContent(targetFile, targetCharset);
-
-        Integer indentationAmount = targetFileConfiguration.getIndentation();
-        String  indentationString = null;
-
-        if (indentationAmount > 0) {
-            indentationString = StringUtils.leftPad("", indentationAmount, " ");
+        if (null == destinationFile) {
+            destinationFile = templateFile;
         }
 
+        log.info(String.format(
+            "Merging template file \"%s\" into \"%s\"...",
+            templateFile,
+            destinationFile
+        ));
+
+        ensureDestinationFile(destinationFile);
+
+        Charset destinationCharset     = getCharset(targetFileConfiguration);
+        String  destinationFileContent = getFileContent(templateFile, destinationCharset);
+        String  indentation            = getIndentation(targetFileConfiguration);
+
         for (SourceFileConfiguration sourceFileConfiguration : targetFileConfiguration.getSourceFiles()) {
-            targetFileContent = mergeSourceFile(
+            destinationFileContent = mergeSourceFile(
                 sourceFileConfiguration,
-                targetFileContent,
-                indentationString
+                destinationFileContent,
+                indentation
             );
         }
 
-        log.info("Writing merged target file...");
+        log.info("Writing merged destination file...");
 
         if (targetFileConfiguration.isFiltering()) {
-            targetFileContent = filterFileContent(targetFileContent);
+            destinationFileContent = filterFileContent(destinationFileContent);
         }
 
         Files.write(
-            targetFile.toPath(),
-            targetFileContent.getBytes(targetCharset)
+            destinationFile.toPath(),
+            destinationFileContent.getBytes(destinationCharset)
         );
+
+        setProperties(propertiesBackup);
+    }
+
+    private Properties setProperties(TargetFileConfiguration targetFileConfiguration) {
+        return setProperties(
+            targetFileConfiguration.getProperties()
+        );
+    }
+
+    private Properties setProperties(Properties newProperties) {
+        Properties currentProperties = mavenProject.getProperties();
+        Properties backupProperties  = (Properties)currentProperties.clone();
+
+        newProperties
+            .entrySet()
+            .forEach(
+                property ->
+                    currentProperties.setProperty(
+                        (String)property.getKey(),
+                        (String)property.getValue()
+                    )
+            );
+
+        return backupProperties;
     }
 
     @Override
