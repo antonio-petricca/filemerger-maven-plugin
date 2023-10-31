@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -205,8 +204,10 @@ public class MavenFileMergerMojo extends AbstractMojo {
     }
 
     private void mergeTargetFile(TargetFileConfiguration targetFileConfiguration)
-        throws IOException, MavenFilteringException
+        throws IOException, MavenFilteringException, MojoExecutionException
     {
+        targetFileConfiguration.validate();
+
         Properties propertiesBackup = setProperties(targetFileConfiguration);
         File       targetFile       = targetFileConfiguration.getTargetFile();
         File       templateFile     = targetFileConfiguration.getTemplateFile();
@@ -276,7 +277,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
     @Override
     public void execute()
-        throws MojoExecutionException, MojoFailureException
+        throws MojoExecutionException
     {
         log.info(String.format(
             "Merging %d file(s)...",
@@ -287,7 +288,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
             try {
                 mergeTargetFile(targetFileConfiguration);
             } catch(IOException | MavenFilteringException exception) {
-                throw new RuntimeException(exception);
+                throw new MojoExecutionException(exception);
             }
         }
 

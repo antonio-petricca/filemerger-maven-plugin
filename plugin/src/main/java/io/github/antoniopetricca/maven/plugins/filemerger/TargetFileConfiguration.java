@@ -1,5 +1,7 @@
 package io.github.antoniopetricca.maven.plugins.filemerger;
 
+import org.apache.maven.plugin.MojoExecutionException;
+
 import java.io.File;
 import java.util.Properties;
 
@@ -29,6 +31,30 @@ public class TargetFileConfiguration extends AbstractFileConfiguration {
 
     public File getTemplateFile() {
         return templateFile;
+    }
+
+    @Override
+    public void validate()
+        throws MojoExecutionException
+    {
+        validate(
+            (indentation >= 0),
+            "Indentation must be greater than zero."
+        );
+
+        validate(
+            ((null != sourceFiles) && (sourceFiles.length > 0)),
+            "Null or empty source files list."
+        );
+
+        for (SourceFileConfiguration sourceFileConfiguration : sourceFiles) {
+            sourceFileConfiguration.validate();
+        }
+
+        validate(
+            ((null != templateFile) && templateFile.exists()),
+            "Template file null or not found."
+        );
     }
 
 }

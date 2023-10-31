@@ -1,5 +1,7 @@
 package io.github.antoniopetricca.maven.plugins.filemerger;
 
+import org.apache.maven.plugin.MojoExecutionException;
+
 import java.io.File;
 
 public class SourceFileConfiguration extends AbstractFileConfiguration {
@@ -18,6 +20,21 @@ public class SourceFileConfiguration extends AbstractFileConfiguration {
 
     public boolean isEncode() {
         return encode;
+    }
+
+    @Override
+    public void validate()
+        throws MojoExecutionException
+    {
+        validate(
+            ((null != placeholder) && !placeholder.isEmpty()),
+            "Null or empty placeholder."
+        );
+
+        validate(
+            ((null != file) && file.exists()),
+            "Source file null or not found."
+        );
     }
 
 }
