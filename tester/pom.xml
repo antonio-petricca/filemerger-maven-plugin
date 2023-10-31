@@ -32,11 +32,11 @@
                         <configuration>
                            <targetFiles>
                                 <targetFile>
-                                    <charset>UTF-8</charset>
-                                    <indentation>4</indentation>
-
                                     <targetFile>${project.build.outputDirectory}/target-file.txt</targetFile>
                                     <templateFile>${assets-path}/template-file.txt</templateFile>
+
+                                    <charset>UTF-8</charset>
+                                    <indentation>4</indentation>
 
                                     <properties>
                                         <plugin.tester.environment>development</plugin.tester.environment>
