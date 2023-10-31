@@ -1,4 +1,4 @@
-package io.github.antoniopetricca.maven.plugins.filemerger;
+package io.github.antoniopetricca.maven.plugins.filemerger.configuration;
 
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -7,11 +7,11 @@ import java.util.Properties;
 
 public class TargetFileConfiguration extends AbstractFileConfiguration {
 
-    private Integer                   indentation = 0;
-    private Properties                properties;
-    private SourceFileConfiguration[] sourceFiles;
-    private File                      targetFile;
-    private File                      templateFile;
+    private Integer    indentation = 0;
+    private Properties properties;
+    private String     sourceFileSet;
+    private File       targetFile;
+    private File       templateFile;
 
     public Integer getIndentation() {
         return indentation;
@@ -21,8 +21,8 @@ public class TargetFileConfiguration extends AbstractFileConfiguration {
         return properties;
     }
 
-    public SourceFileConfiguration[] getSourceFiles() {
-        return sourceFiles;
+    public String getSourceFileSet() {
+        return sourceFileSet;
     }
 
     public File getTargetFile() {
@@ -43,13 +43,9 @@ public class TargetFileConfiguration extends AbstractFileConfiguration {
         );
 
         validate(
-            ((null != sourceFiles) && (sourceFiles.length > 0)),
-            "Null or empty source files list."
+            ((null != sourceFileSet) && !sourceFileSet.isEmpty()),
+            "Null or empty source file set identifier."
         );
-
-        for (SourceFileConfiguration sourceFileConfiguration : sourceFiles) {
-            sourceFileConfiguration.validate();
-        }
 
         validate(
             ((null != templateFile) && templateFile.exists()),

@@ -2,6 +2,7 @@ package io.github.antoniopetricca.maven.plugins.filemerger;
 
 // https://www.baeldung.com/maven-plugin
 
+import io.github.antoniopetricca.maven.plugins.filemerger.configuration.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -18,9 +19,7 @@ import org.apache.maven.shared.filtering.MavenFilteringException;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.Base64;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Mojo(
@@ -39,6 +38,9 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
     @Component(role = MavenSession.class)
     MavenSession mavenSession;
+
+    @Parameter(required = true)
+    private SourceFileSetConfiguration[] sourceFileSets;
 
     @Parameter(required = true)
     private TargetFileConfiguration[] targetFiles;
@@ -146,6 +148,35 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return indentationString;
     }
 
+    private SourceFileConfiguration[] getSourceFileConfigurations(String setId)
+        throws MojoExecutionException
+    {
+        Optional<SourceFileSetConfiguration> sourceFileConfigurations =
+            Arrays.stream(sourceFileSets)
+                .filter(
+                    sourceFileSetConfiguration -> sourceFileSetConfiguration.getId().equals(setId)
+                )
+                .findFirst();
+
+        if (!sourceFileConfigurations.isPresent()) {
+           throw new MojoExecutionException(
+                String.format(
+                    "Source file set \"%s\" not found",
+                    setId
+                )
+           );
+        }
+
+        SourceFileSetConfiguration sourceFileSetConfiguration =
+            sourceFileConfigurations.get();
+
+        sourceFileSetConfiguration.validate();
+
+        return sourceFileConfigurations
+            .get()
+            .getSourceFiles();
+    }
+
     private String mergeSourceFile(
         SourceFileConfiguration sourceFileConfiguration,
         String                  targetFileContent,
@@ -203,7 +234,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         );
     }
 
-    private void mergeTargetFile(TargetFileConfiguration targetFileConfiguration)
+    private void mergeTargetFile(TargetFileConfiguration targetFileConfiguration, SourceFileConfiguration[] sourceFileConfigurations)
         throws IOException, MavenFilteringException, MojoExecutionException
     {
         targetFileConfiguration.validate();
@@ -228,7 +259,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         String  targetFileContent = getFileContent(templateFile, targetCharset);
         String  indentation       = getIndentation(targetFileConfiguration);
 
-        for (SourceFileConfiguration sourceFileConfiguration : targetFileConfiguration.getSourceFiles()) {
+        for (SourceFileConfiguration sourceFileConfiguration : sourceFileConfigurations) {
             targetFileContent = mergeSourceFile(
                 sourceFileConfiguration,
                 targetFileContent,
@@ -279,14 +310,15 @@ public class MavenFileMergerMojo extends AbstractMojo {
     public void execute()
         throws MojoExecutionException
     {
-        log.info(String.format(
-            "Merging %d file(s)...",
-            targetFiles.length
-        ));
+        log.info("Merging...");
 
         for (TargetFileConfiguration targetFileConfiguration : targetFiles) {
             try {
-                mergeTargetFile(targetFileConfiguration);
+                SourceFileConfiguration[] sourceFileConfigurations = getSourceFileConfigurations(
+                    targetFileConfiguration.getSourceFileSet()
+                );
+
+                mergeTargetFile(targetFileConfiguration, sourceFileConfigurations);
             } catch(IOException | MavenFilteringException exception) {
                 throw new MojoExecutionException(exception);
             }

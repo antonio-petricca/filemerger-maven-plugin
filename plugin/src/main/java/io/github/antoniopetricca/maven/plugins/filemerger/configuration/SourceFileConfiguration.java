@@ -1,4 +1,4 @@
-package io.github.antoniopetricca.maven.plugins.filemerger;
+package io.github.antoniopetricca.maven.plugins.filemerger.configuration;
 
 import org.apache.maven.plugin.MojoExecutionException;
 

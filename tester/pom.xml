@@ -30,18 +30,9 @@
                             <goal>file-merge</goal>
                         </goals>
                         <configuration>
-                           <targetFiles>
-                                <targetFile>
-                                    <targetFile>${project.build.outputDirectory}/target-file.txt</targetFile>
-                                    <templateFile>${assets-path}/template-file.txt</templateFile>
-
-                                    <charset>UTF-8</charset>
-                                    <indentation>4</indentation>
-
-                                    <properties>
-                                        <plugin.tester.environment>development</plugin.tester.environment>
-                                    </properties>
-
+                            <sourceFileSets>
+                                <sourceFileSet>
+                                    <id>development-set</id>
                                     <sourceFiles>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
@@ -72,6 +63,22 @@
                                             <placeholder>@GITHUB_LOGO@</placeholder>
                                         </sourceFile>
                                     </sourceFiles>
+                                </sourceFileSet>
+                            </sourceFileSets>
+
+                           <targetFiles>
+                                <targetFile>
+                                    <targetFile>${project.build.outputDirectory}/target-file.txt</targetFile>
+                                    <templateFile>${assets-path}/template-file.txt</templateFile>
+
+                                    <charset>UTF-8</charset>
+                                    <indentation>4</indentation>
+
+                                    <properties>
+                                        <plugin.tester.environment>development</plugin.tester.environment>
+                                    </properties>
+
+                                    <sourceFileSet>development-set</sourceFileSet>
                                 </targetFile>
                            </targetFiles>
                         </configuration>

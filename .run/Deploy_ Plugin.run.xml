@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Build / Install: Plugin only" type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="Deploy: Plugin" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -12,13 +12,14 @@
           <option name="goals">
             <list>
               <option value="clean" />
-              <option value="install" />
-              <option value="-X" />
+              <option value="deploy" />
             </list>
           </option>
           <option name="pomFileName" />
           <option name="profilesMap">
-            <map />
+            <map>
+              <entry key="deploy" value="true" />
+            </map>
           </option>
           <option name="projectsCmdOptionValues">
             <list />
