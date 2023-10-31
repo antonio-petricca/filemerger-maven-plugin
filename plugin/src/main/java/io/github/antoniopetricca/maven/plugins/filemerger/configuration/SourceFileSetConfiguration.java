@@ -25,8 +25,8 @@ public class SourceFileSetConfiguration extends AbstractConfiguration {
         );
 
         validate(
-            ((null != sourceFiles) && (sourceFiles.length > 0)),
-            "Null or empty source files list."
+            (null != sourceFiles),
+            "Null source files list."
         );
 
         for (SourceFileConfiguration sourceFileConfiguration : sourceFiles) {
