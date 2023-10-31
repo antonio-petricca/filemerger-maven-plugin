@@ -72,6 +72,7 @@
                                     <templateFile>${assets-path}/template-file.txt</templateFile>
 
                                     <charset>UTF-8</charset>
+                                    <filtering>true</filtering>
                                     <indentation>4</indentation>
 
                                     <properties>
