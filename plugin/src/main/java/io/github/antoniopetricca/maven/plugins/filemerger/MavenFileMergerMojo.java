@@ -161,7 +161,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         if (!sourceFileConfigurations.isPresent()) {
            throw new MojoExecutionException(
                 String.format(
-                    "Source file set \"%s\" not found",
+                    "Source file set \"%s\" not found.",
                     setId
                 )
            );
