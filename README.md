@@ -12,4 +12,4 @@ The **Tester** module is a self explanatory example:
 
 [![Github CI](https://github.com/antonio-petricca/filemerger-maven-plugin/actions/workflows/maven.yml/badge.svg)](https://github.com/antonio-petricca/filemerger-maven-plugin/actions/workflows/maven.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.antonio-petricca/filemerger-maven-plugin)](https://central.sonatype.com/artifact/io.github.antonio-petricca/filemerger-maven-plugin)
-![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)
+[![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)](https://img.shields.io/github/license/apache/maven.svg?label=License)
