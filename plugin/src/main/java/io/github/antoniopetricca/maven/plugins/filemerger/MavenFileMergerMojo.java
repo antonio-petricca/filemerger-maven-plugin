@@ -259,15 +259,17 @@ public class MavenFileMergerMojo extends AbstractMojo {
         Properties currentProperties = mavenProject.getProperties();
         Properties backupProperties  = (Properties)currentProperties.clone();
 
-        newProperties
-            .entrySet()
-            .forEach(
-                property ->
-                    currentProperties.setProperty(
-                        (String)property.getKey(),
-                        (String)property.getValue()
-                    )
-            );
+        if (null != newProperties) {
+            newProperties
+                .entrySet()
+                .forEach(
+                    property ->
+                        currentProperties.setProperty(
+                            (String)property.getKey(),
+                            (String)property.getValue()
+                        )
+                );
+        }
 
         return backupProperties;
     }
