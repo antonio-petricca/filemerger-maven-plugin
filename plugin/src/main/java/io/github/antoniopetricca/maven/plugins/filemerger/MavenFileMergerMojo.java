@@ -103,6 +103,66 @@ public class MavenFileMergerMojo extends AbstractMojo {
         );
     }
 
+    private String mergeSourceFile(
+        SourceFileConfiguration sourceFileConfiguration,
+        String                  targetFileContent,
+        String                  indentationString
+    )
+        throws IOException, MavenFilteringException
+    {
+        Charset sourceCharset = Charset.forName(
+            sourceFileConfiguration.getCharset()
+        );
+
+        File sourceFile = sourceFileConfiguration.getFile();
+
+        log.info(String.format(
+            "Merging source file \"%s\"...",
+            sourceFile.toString()
+        ));
+
+        String sourceFileContent;
+
+        if (sourceFileConfiguration.isEncode())  {
+            sourceFileContent = getFileContent(sourceFile, sourceCharset);
+
+            if (sourceFileConfiguration.isFiltering()) {
+                sourceFileContent = filterFileContent(sourceFileContent);
+            }
+
+            byte[] sourceFileBytes = sourceFileContent.getBytes(sourceCharset);
+
+            sourceFileContent = Base64
+                .getEncoder()
+                .encodeToString(sourceFileBytes);
+
+            if (null != indentationString) {
+                sourceFileContent = (indentationString + sourceFileContent);
+            }
+        } else {
+            if (null != indentationString) {
+                List<String> sourceFileLines   = getFileLines(sourceFile, sourceCharset);
+                final String streamIndentation = indentationString;
+
+                sourceFileContent = sourceFileLines
+                    .stream()
+                    .map(line -> (streamIndentation + line))
+                    .collect(Collectors.joining("\n"));
+            } else {
+                sourceFileContent = getFileContent(sourceFile, sourceCharset);
+            }
+
+            if (sourceFileConfiguration.isFiltering()) {
+                sourceFileContent = filterFileContent(sourceFileContent);
+            }
+        }
+
+        return targetFileContent.replace(
+            sourceFileConfiguration.getPlaceholder(),
+            sourceFileContent
+        );
+    }
+
     private void mergeTargetFile(TargetFileConfiguration targetFileConfiguration)
         throws IOException, MavenFilteringException
     {
@@ -127,56 +187,10 @@ public class MavenFileMergerMojo extends AbstractMojo {
         }
 
         for (SourceFileConfiguration sourceFileConfiguration : targetFileConfiguration.getSourceFiles()) {
-            File sourceFile = sourceFileConfiguration.getFile();
-
-            log.info(String.format(
-                "Merging source file \"%s\"...",
-                sourceFile.toString()
-            ));
-
-            String sourceFileContent;
-
-            if (sourceFileConfiguration.isEncode())  {
-                sourceFileContent = getFileContent(sourceFile, targetCharset);
-
-                if (sourceFileConfiguration.isFiltering()) {
-                    sourceFileContent = filterFileContent(sourceFileContent);
-                }
-
-                byte[] sourceFileBytes = sourceFileContent.getBytes(targetCharset);
-
-                sourceFileContent = Base64
-                    .getEncoder()
-                    .encodeToString(sourceFileBytes);
-
-                if (null != indentationString) {
-                    sourceFileContent = (indentationString + sourceFileContent);
-                }
-            } else {
-                if (null != indentationString) {
-                    Charset sourceCharset = Charset.forName(
-                        sourceFileConfiguration.getCharset()
-                    );
-
-                    List<String> sourceFileLines   = getFileLines(sourceFile, sourceCharset);
-                    final String streamIndentation = indentationString;
-
-                    sourceFileContent = sourceFileLines
-                        .stream()
-                        .map(line -> (streamIndentation + line))
-                        .collect(Collectors.joining("\n"));
-                } else {
-                    sourceFileContent = getFileContent(sourceFile, targetCharset);
-                }
-
-                if (sourceFileConfiguration.isFiltering()) {
-                    sourceFileContent = filterFileContent(sourceFileContent);
-                }
-            }
-
-            targetFileContent = targetFileContent.replace(
-                sourceFileConfiguration.getPlaceholder(),
-                sourceFileContent
+            targetFileContent = mergeSourceFile(
+                sourceFileConfiguration,
+                targetFileContent,
+                indentationString
             );
         }
 
