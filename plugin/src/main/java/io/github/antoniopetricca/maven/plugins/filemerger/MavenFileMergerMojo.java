@@ -304,11 +304,13 @@ public class MavenFileMergerMojo extends AbstractMojo {
         File   targetFile        = ensureTargetFile(targetFolder, templateFile);
         String targetFileContent = getFileContent(templateFile, targetCharset);
 
-        for (SourceFile sourceFile : sourceFilesConfiguration) {
-            targetFileContent = mergeSourceFile(sourceFile,
-                targetFileContent,
-                indentation
-            );
+        if (null != sourceFilesConfiguration) {
+            for (SourceFile sourceFile : sourceFilesConfiguration) {
+                targetFileContent = mergeSourceFile(sourceFile,
+                    targetFileContent,
+                    indentation
+                );
+            }
         }
 
         log.info("Writing target file...");

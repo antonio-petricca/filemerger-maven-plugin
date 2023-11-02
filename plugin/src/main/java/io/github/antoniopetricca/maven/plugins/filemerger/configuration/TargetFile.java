@@ -42,12 +42,7 @@ public class TargetFile extends AbstractFile {
         );
 
         validate(
-            ((null != sourceFilesSet ) && !sourceFilesSet.isEmpty()),
-            "Null or empty source file set identifier."
-        );
-
-        validate(
-            ((null != targetFolder ) && !targetFolder.isEmpty()),
+            ((null != targetFolder) && !targetFolder.isEmpty()),
             "Target folder null or not found."
         );
 
