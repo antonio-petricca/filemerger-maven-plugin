@@ -15,10 +15,14 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.DefaultMavenReaderFilter;
 import org.apache.maven.shared.filtering.MavenFilteringException;
+import org.codehaus.plexus.util.DirectoryScanner;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,30 +67,35 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return writer.toString();
     }
 
-    private void ensureTargetFile(File file)
+    private File ensureTargetFile(File targetFolder, File templateFile)
         throws IOException
     {
-        File path = file.getParentFile();
+        Path   targetPath       = targetFolder.toPath();
+        String templateFileName = templateFile.getName();
 
-        if (!path.exists()) {
+        if (!targetFolder.exists()) {
             log.info(String.format(
                 "Creating target folder \"%s\"...",
-                path
+                targetFolder
             ));
 
-            Files.createDirectories(
-                path.toPath()
-            );
+            Files.createDirectories(targetPath);
         }
 
-        if (!file.exists()) {
+        File targetFile = targetPath
+            .resolve(templateFileName)
+            .toFile();
+
+        if (!targetFile.exists()) {
             log.info(String.format(
                 "Creating target file \"%s\"...",
-                file
+                targetFile
             ));
 
-            file.createNewFile();
+            targetFile.createNewFile();
         }
+
+        return targetFile;
     }
 
     private String filterFileContent(String content)
@@ -267,33 +276,33 @@ public class MavenFileMergerMojo extends AbstractMojo {
     }
 
     private void mergeTargetFile(
-        TargetFile   targetFileConfiguration,
+        File         targetFolder,
+        String       templateFileName,
         Properties   properties,
-        SourceFile[] sourceFilesConfiguration
+        SourceFile[] sourceFilesConfiguration,
+        Charset      targetCharset,
+        String       indentation,
+        boolean      filtering
     )
         throws IOException, MavenFilteringException, MojoExecutionException
     {
-        targetFileConfiguration.validate();
-
-        Properties propertiesBackup = setProperties(properties);
-        File       targetFile       = targetFileConfiguration.getTargetFile();
-        File       templateFile     = targetFileConfiguration.getTemplateFile();
-
-        if (null == targetFile) {
-            targetFile = templateFile;
-        }
-
         log.info(String.format(
             "Merging template file \"%s\" into \"%s\"...",
-            templateFile,
-            targetFile
+            templateFileName,
+            targetFolder
         ));
 
-        ensureTargetFile(targetFile);
+        File templateFile = new File(templateFileName);
 
-        Charset targetCharset     = getCharset(targetFileConfiguration);
-        String  targetFileContent = getFileContent(templateFile, targetCharset);
-        String  indentation       = getIndentation(targetFileConfiguration);
+        if (!templateFile.exists()) {
+            throw new MojoExecutionException(String.format(
+                "Template file \"%s\" does not exists.",
+                templateFileName
+            ));
+        }
+
+        File   targetFile        = ensureTargetFile(targetFolder, templateFile);
+        String targetFileContent = getFileContent(templateFile, targetCharset);
 
         for (SourceFile sourceFile : sourceFilesConfiguration) {
             targetFileContent = mergeSourceFile(sourceFile,
@@ -304,7 +313,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
         log.info("Writing target file...");
 
-        if (targetFileConfiguration.isFiltering()) {
+        if (filtering) {
             targetFileContent = filterFileContent(targetFileContent);
         }
 
@@ -312,6 +321,61 @@ public class MavenFileMergerMojo extends AbstractMojo {
             targetFile.toPath(),
             targetFileContent.getBytes(targetCharset)
         );
+    }
+
+    private void mergeTargetFile(
+        TargetFile   targetFileConfiguration,
+        Properties   properties,
+        SourceFile[] sourceFilesConfiguration
+    )
+        throws IOException, MavenFilteringException, MojoExecutionException
+    {
+        String templateFilesGlob = targetFileConfiguration.getTemplateFiles();
+
+        log.info(String.format(
+            "Merging template file(s) \"%s\"...",
+            templateFilesGlob
+        ));
+
+        targetFileConfiguration.validate();
+
+        String     indentation      = getIndentation(targetFileConfiguration);
+        Properties propertiesBackup = setProperties(properties);
+        Charset    targetCharset    = getCharset(targetFileConfiguration);
+        String     targetFolderName = targetFileConfiguration.getTargetFolder();
+        File       targetFolder     = new File(targetFolderName);
+
+        DirectoryScanner directoryScanner = new DirectoryScanner();
+
+        directoryScanner.setBasedir(".");
+        directoryScanner.setCaseSensitive(true);
+        directoryScanner.setFollowSymlinks(false);
+
+        directoryScanner.setIncludes(
+            new String[] { templateFilesGlob }
+        );
+
+        directoryScanner.scan();
+
+        String[] templateFiles = directoryScanner.getIncludedFiles();
+
+        if ((null == templateFiles) || (0 == templateFiles.length)) {
+            log.warn("No template files found.");
+        } else {
+            boolean filtering = targetFileConfiguration.isFiltering();
+
+            for (int index = 0; index < templateFiles.length; index++) {
+                mergeTargetFile(
+                    targetFolder,
+                    templateFiles[index],
+                    properties,
+                    sourceFilesConfiguration,
+                    targetCharset,
+                    indentation,
+                    filtering
+                );
+            }
+        }
 
         setProperties(propertiesBackup);
     }

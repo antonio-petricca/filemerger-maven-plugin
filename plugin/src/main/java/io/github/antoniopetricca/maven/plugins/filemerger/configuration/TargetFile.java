@@ -3,15 +3,14 @@ package io.github.antoniopetricca.maven.plugins.filemerger.configuration;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
-import java.util.Properties;
 
 public class TargetFile extends AbstractFile {
 
     private Integer indentation = 0;
     private String  propertiesSet;
     private String  sourceFilesSet;
-    private File    targetFile;
-    private File    templateFile;
+    private String  targetFolder;
+    private String  templateFiles;
 
     public Integer getIndentation() {
         return indentation;
@@ -25,12 +24,12 @@ public class TargetFile extends AbstractFile {
         return sourceFilesSet;
     }
 
-    public File getTargetFile() {
-        return targetFile;
+    public String getTargetFolder() {
+        return targetFolder;
     }
 
-    public File getTemplateFile() {
-        return templateFile;
+    public String getTemplateFiles() {
+        return templateFiles;
     }
 
     @Override
@@ -48,7 +47,12 @@ public class TargetFile extends AbstractFile {
         );
 
         validate(
-            ((null != templateFile) && templateFile.exists()),
+            ((null != targetFolder ) && !targetFolder.isEmpty()),
+            "Target folder null or not found."
+        );
+
+        validate(
+            ((null != templateFiles) && !templateFiles.isEmpty()),
             "Template file null or not found."
         );
     }

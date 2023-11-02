@@ -77,8 +77,8 @@
 
                            <targetFiles>
                                 <targetFile>
-                                    <targetFile>${project.build.outputDirectory}/target-file.txt</targetFile>
-                                    <templateFile>${assets-path}/template-file.txt</templateFile>
+                                    <targetFolder>${project.build.outputDirectory}</targetFolder>
+                                    <templateFiles>${assets-path}/template*</templateFiles>
 
                                     <charset>UTF-8</charset>
                                     <filtering>true</filtering>
