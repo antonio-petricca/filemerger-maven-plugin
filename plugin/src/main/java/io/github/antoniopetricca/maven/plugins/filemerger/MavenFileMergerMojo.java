@@ -23,6 +23,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,7 +69,14 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return writer.toString();
     }
 
-    private File ensureTargetFile(File targetFolder, File templateFile)
+    private void copyFilePermissions(Path sourcePath, Path targetPath)
+        throws IOException
+    {
+        Set<PosixFilePermission> sourcePermissions = Files.getPosixFilePermissions(sourcePath);
+        Files.setPosixFilePermissions(targetPath, sourcePermissions);
+    }
+
+    private File ensureTargetFile(File targetFolder, File templateFile, boolean copyPermissions)
         throws IOException
     {
         Path   targetPath       = targetFolder.toPath();
@@ -93,6 +102,15 @@ public class MavenFileMergerMojo extends AbstractMojo {
             ));
 
             targetFile.createNewFile();
+        }
+
+        if (copyPermissions) {
+            log.info("Applying file permissions...");
+
+            copyFilePermissions(
+                templateFile.toPath(),
+                targetFile.toPath()
+            );
         }
 
         return targetFile;
@@ -278,11 +296,11 @@ public class MavenFileMergerMojo extends AbstractMojo {
     private void mergeTargetFile(
         File         targetFolder,
         String       templateFileName,
-        Properties   properties,
         SourceFile[] sourceFilesConfiguration,
         Charset      targetCharset,
         String       indentation,
-        boolean      filtering
+        boolean      filtering,
+        boolean      copyPermissions
     )
         throws IOException, MavenFilteringException, MojoExecutionException
     {
@@ -301,7 +319,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
             ));
         }
 
-        File   targetFile        = ensureTargetFile(targetFolder, templateFile);
+        File   targetFile        = ensureTargetFile(targetFolder, templateFile, copyPermissions);
         String targetFileContent = getFileContent(templateFile, targetCharset);
 
         if (null != sourceFilesConfiguration) {
@@ -341,6 +359,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
         targetFileConfiguration.validate();
 
+        boolean    copyPermissions  = targetFileConfiguration.isCopyPermissions();
         String     indentation      = getIndentation(targetFileConfiguration);
         Properties propertiesBackup = setProperties(properties);
         Charset    targetCharset    = getCharset(targetFileConfiguration);
@@ -370,11 +389,11 @@ public class MavenFileMergerMojo extends AbstractMojo {
                 mergeTargetFile(
                     targetFolder,
                     templateFiles[index],
-                    properties,
                     sourceFilesConfiguration,
                     targetCharset,
                     indentation,
-                    filtering
+                    filtering,
+                    copyPermissions
                 );
             }
         }

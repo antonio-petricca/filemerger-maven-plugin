@@ -2,10 +2,9 @@ package io.github.antoniopetricca.maven.plugins.filemerger.configuration;
 
 import org.apache.maven.plugin.MojoExecutionException;
 
-import java.io.File;
-
 public class TargetFile extends AbstractFile {
 
+    private boolean copyPermissions;
     private Integer indentation = 0;
     private String  propertiesSet;
     private String  sourceFilesSet;
@@ -14,6 +13,10 @@ public class TargetFile extends AbstractFile {
 
     public Integer getIndentation() {
         return indentation;
+    }
+
+    public boolean isCopyPermissions() {
+        return copyPermissions;
     }
 
     public String getPropertiesSet() {

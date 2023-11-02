@@ -84,6 +84,7 @@
                                     <sourceFilesSet>development-files</sourceFilesSet>
 
                                     <charset>UTF-8</charset>
+                                    <copyPermissions>true</copyPermissions>
                                     <filtering>true</filtering>
                                     <indentation>4</indentation>
                                 </targetFile>
