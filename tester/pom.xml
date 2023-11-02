@@ -80,12 +80,12 @@
                                     <targetFolder>${project.build.outputDirectory}</targetFolder>
                                     <templateFiles>${assets-path}/template*</templateFiles>
 
+                                    <propertiesSet>development-properties</propertiesSet>
+                                    <sourceFilesSet>development-files</sourceFilesSet>
+
                                     <charset>UTF-8</charset>
                                     <filtering>true</filtering>
                                     <indentation>4</indentation>
-
-                                    <propertiesSet>development-properties</propertiesSet>
-                                    <sourceFilesSet>development-files</sourceFilesSet>
                                 </targetFile>
                            </targetFiles>
                         </configuration>
