@@ -5,24 +5,24 @@ import org.apache.maven.plugin.MojoExecutionException;
 import java.io.File;
 import java.util.Properties;
 
-public class TargetFileConfiguration extends AbstractFileConfiguration {
+public class TargetFile extends AbstractFile {
 
-    private Integer    indentation = 0;
-    private Properties properties;
-    private String     sourceFileSet;
-    private File       targetFile;
-    private File       templateFile;
+    private Integer indentation = 0;
+    private String  propertiesSet;
+    private String  sourceFilesSet;
+    private File    targetFile;
+    private File    templateFile;
 
     public Integer getIndentation() {
         return indentation;
     }
 
-    public Properties getProperties() {
-        return properties;
+    public String getPropertiesSet() {
+        return propertiesSet;
     }
 
-    public String getSourceFileSet() {
-        return sourceFileSet;
+    public String getSourceFilesSet() {
+        return sourceFilesSet;
     }
 
     public File getTargetFile() {
@@ -43,7 +43,7 @@ public class TargetFileConfiguration extends AbstractFileConfiguration {
         );
 
         validate(
-            ((null != sourceFileSet) && !sourceFileSet.isEmpty()),
+            ((null != sourceFilesSet ) && !sourceFilesSet.isEmpty()),
             "Null or empty source file set identifier."
         );
 

@@ -30,7 +30,16 @@
                             <goal>file-merge</goal>
                         </goals>
                         <configuration>
-                            <sourceFileSets>
+                            <propertiesSets>
+                                <propertiesSet>
+                                    <id>development-properties</id>
+                                    <properties>
+                                        <plugin.tester.environment>development</plugin.tester.environment>
+                                    </properties>
+                                </propertiesSet>
+                            </propertiesSets>
+
+                            <sourceFilesSets>
                                 <sourceFileSet>
                                     <id>development-set</id>
                                     <sourceFiles>
@@ -64,7 +73,7 @@
                                         </sourceFile>
                                     </sourceFiles>
                                 </sourceFileSet>
-                            </sourceFileSets>
+                            </sourceFilesSets>
 
                            <targetFiles>
                                 <targetFile>
@@ -75,11 +84,8 @@
                                     <filtering>true</filtering>
                                     <indentation>4</indentation>
 
-                                    <properties>
-                                        <plugin.tester.environment>development</plugin.tester.environment>
-                                    </properties>
-
-                                    <sourceFileSet>development-set</sourceFileSet>
+                                    <propertiesSet>development-properties</propertiesSet>
+                                    <sourceFilesSet>development-set</sourceFilesSet>
                                 </targetFile>
                            </targetFiles>
                         </configuration>

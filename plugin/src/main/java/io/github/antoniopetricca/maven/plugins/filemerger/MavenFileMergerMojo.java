@@ -39,11 +39,14 @@ public class MavenFileMergerMojo extends AbstractMojo {
     @Component(role = MavenSession.class)
     MavenSession mavenSession;
 
-    @Parameter(required = true)
-    private SourceFileSetConfiguration[] sourceFileSets;
+    @Parameter(required = false)
+    private PropertiesSet[] propertiesSets;
 
     @Parameter(required = true)
-    private TargetFileConfiguration[] targetFiles;
+    private SourceFilesSet[] sourceFilesSets;
+
+    @Parameter(required = true)
+    private TargetFile[] targetFiles;
 
     String convertReaderToString(Reader reader) throws IOException {
         StringWriter writer = new StringWriter();
@@ -105,7 +108,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return convertReaderToString(targetReader);
     }
 
-    private Charset getCharset(AbstractFileConfiguration fileConfiguration) {
+    private Charset getCharset(AbstractFile fileConfiguration) {
         return Charset.forName(
             fileConfiguration.getCharset()
         );
@@ -137,7 +140,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         );
     }
 
-    private String getIndentation(TargetFileConfiguration targetFileConfiguration) {
+    private String getIndentation(TargetFile targetFileConfiguration) {
         Integer indentationAmount = targetFileConfiguration.getIndentation();
         String  indentationString = null;
 
@@ -148,13 +151,42 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return indentationString;
     }
 
-    private SourceFileConfiguration[] getSourceFileConfigurations(String setId)
+    private Properties getPropertiesConfiguration(String setId)
         throws MojoExecutionException
     {
-        Optional<SourceFileSetConfiguration> sourceFileConfigurations =
-            Arrays.stream(sourceFileSets)
+        Optional<PropertiesSet> propertiesSetConfiguration =
+            Arrays.stream(this.propertiesSets)
+                  .filter(
+                      propertiesSet -> propertiesSet.getId().equals(setId)
+                  )
+                  .findFirst();
+
+        if (!propertiesSetConfiguration.isPresent()) {
+            throw new MojoExecutionException(
+                String.format(
+                    "Properties set \"%s\" not found.",
+                    setId
+                )
+            );
+        }
+
+        PropertiesSet propertiesSet =
+            propertiesSetConfiguration.get();
+
+        propertiesSet.validate();
+
+        return propertiesSetConfiguration
+            .get()
+            .getProperties();
+    }
+
+    private SourceFile[] getSourceFilesConfiguration(String setId)
+        throws MojoExecutionException
+    {
+        Optional<SourceFilesSet> sourceFileConfigurations =
+            Arrays.stream(this.sourceFilesSets)
                 .filter(
-                    sourceFileSetConfiguration -> sourceFileSetConfiguration.getId().equals(setId)
+                    sourceFilesSet -> sourceFilesSet.getId().equals(setId)
                 )
                 .findFirst();
 
@@ -167,10 +199,10 @@ public class MavenFileMergerMojo extends AbstractMojo {
            );
         }
 
-        SourceFileSetConfiguration sourceFileSetConfiguration =
+        SourceFilesSet sourceFilesSet =
             sourceFileConfigurations.get();
 
-        sourceFileSetConfiguration.validate();
+        sourceFilesSet.validate();
 
         return sourceFileConfigurations
             .get()
@@ -178,9 +210,9 @@ public class MavenFileMergerMojo extends AbstractMojo {
     }
 
     private String mergeSourceFile(
-        SourceFileConfiguration sourceFileConfiguration,
-        String                  targetFileContent,
-        String                  indentationString
+        SourceFile sourceFileConfiguration,
+        String     targetFileContent,
+        String     indentationString
     )
         throws IOException, MavenFilteringException
     {
@@ -234,12 +266,16 @@ public class MavenFileMergerMojo extends AbstractMojo {
         );
     }
 
-    private void mergeTargetFile(TargetFileConfiguration targetFileConfiguration, SourceFileConfiguration[] sourceFileConfigurations)
+    private void mergeTargetFile(
+        TargetFile   targetFileConfiguration,
+        Properties   properties,
+        SourceFile[] sourceFilesConfiguration
+    )
         throws IOException, MavenFilteringException, MojoExecutionException
     {
         targetFileConfiguration.validate();
 
-        Properties propertiesBackup = setProperties(targetFileConfiguration);
+        Properties propertiesBackup = setProperties(properties);
         File       targetFile       = targetFileConfiguration.getTargetFile();
         File       templateFile     = targetFileConfiguration.getTemplateFile();
 
@@ -259,9 +295,8 @@ public class MavenFileMergerMojo extends AbstractMojo {
         String  targetFileContent = getFileContent(templateFile, targetCharset);
         String  indentation       = getIndentation(targetFileConfiguration);
 
-        for (SourceFileConfiguration sourceFileConfiguration : sourceFileConfigurations) {
-            targetFileContent = mergeSourceFile(
-                sourceFileConfiguration,
+        for (SourceFile sourceFile : sourceFilesConfiguration) {
+            targetFileContent = mergeSourceFile(sourceFile,
                 targetFileContent,
                 indentation
             );
@@ -279,12 +314,6 @@ public class MavenFileMergerMojo extends AbstractMojo {
         );
 
         setProperties(propertiesBackup);
-    }
-
-    private Properties setProperties(TargetFileConfiguration targetFileConfiguration) {
-        return setProperties(
-            targetFileConfiguration.getProperties()
-        );
     }
 
     private Properties setProperties(Properties newProperties) {
@@ -312,13 +341,23 @@ public class MavenFileMergerMojo extends AbstractMojo {
     {
         log.info("Merging...");
 
-        for (TargetFileConfiguration targetFileConfiguration : targetFiles) {
+        for (TargetFile targetFile : targetFiles) {
             try {
-                SourceFileConfiguration[] sourceFileConfigurations = getSourceFileConfigurations(
-                    targetFileConfiguration.getSourceFileSet()
-                );
+                Properties properties    = null;
+                String     propertiesSet = targetFile.getPropertiesSet();
 
-                mergeTargetFile(targetFileConfiguration, sourceFileConfigurations);
+                if ((null != propertiesSet) && !propertiesSet.isEmpty()) {
+                    properties = getPropertiesConfiguration(propertiesSet);
+                }
+
+                SourceFile[] sourceFiles    = null;
+                String       sourceFilesSet = targetFile.getSourceFilesSet();
+
+                if ((null != sourceFilesSet) && !sourceFilesSet.isEmpty()) {
+                    sourceFiles = getSourceFilesConfiguration(sourceFilesSet);
+                }
+
+                mergeTargetFile(targetFile, properties, sourceFiles);
             } catch(IOException | MavenFilteringException exception) {
                 throw new MojoExecutionException(exception);
             }

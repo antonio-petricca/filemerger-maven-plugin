@@ -4,7 +4,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
 
-public class SourceFileConfiguration extends AbstractFileConfiguration {
+public class SourceFile extends AbstractFile {
 
     private boolean encode;
     private File    file;

@@ -2,7 +2,7 @@ package io.github.antoniopetricca.maven.plugins.filemerger.configuration;
 
 import java.nio.charset.StandardCharsets;
 
-public abstract class AbstractFileConfiguration extends AbstractConfiguration {
+public abstract class AbstractFile extends AbstractValidObject {
 
     private String  charset   = StandardCharsets.UTF_8.name();
     private boolean filtering = false;
