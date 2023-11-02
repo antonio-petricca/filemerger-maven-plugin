@@ -48,6 +48,9 @@ public class MavenFileMergerMojo extends AbstractMojo {
     @Parameter(required = false)
     private PropertiesSet[] propertiesSets;
 
+    @Parameter(defaultValue = "false", required = false)
+    private boolean skip;
+
     @Parameter(required = false)
     private SourceFilesSet[] sourceFilesSets;
 
@@ -424,6 +427,11 @@ public class MavenFileMergerMojo extends AbstractMojo {
     public void execute()
         throws MojoExecutionException
     {
+        if (skip) {
+            log.warn("Execution skipped.");
+            return;
+        }
+
         log.info("Merging...");
 
         for (TargetFile targetFile : targetFiles) {

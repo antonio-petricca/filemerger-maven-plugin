@@ -30,6 +30,8 @@
                             <goal>file-merge</goal>
                         </goals>
                         <configuration>
+                            <skip>false</skip>
+
                             <propertiesSets>
                                 <propertiesSet>
                                     <id>development-properties</id>
