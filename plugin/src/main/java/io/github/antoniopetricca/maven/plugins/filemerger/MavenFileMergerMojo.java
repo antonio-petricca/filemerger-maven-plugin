@@ -42,7 +42,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
     @Parameter(required = false)
     private PropertiesSet[] propertiesSets;
 
-    @Parameter(required = true)
+    @Parameter(required = false)
     private SourceFilesSet[] sourceFilesSets;
 
     @Parameter(required = true)

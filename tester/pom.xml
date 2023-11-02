@@ -41,7 +41,7 @@
 
                             <sourceFilesSets>
                                 <sourceFileSet>
-                                    <id>development-set</id>
+                                    <id>development-files</id>
                                     <sourceFiles>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
@@ -85,7 +85,7 @@
                                     <indentation>4</indentation>
 
                                     <propertiesSet>development-properties</propertiesSet>
-                                    <sourceFilesSet>development-set</sourceFilesSet>
+                                    <sourceFilesSet>development-files</sourceFilesSet>
                                 </targetFile>
                            </targetFiles>
                         </configuration>
