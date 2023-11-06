@@ -9,7 +9,7 @@
 
     <groupId>io.github.antonio-petricca</groupId>
     <artifactId>filemerger-maven-plugin-tester</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
 
     <packaging>jar</packaging>
 
@@ -61,7 +61,7 @@
                                         </sourceFile>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
-                                            <encode>true</encode>
+                                            <encode>false</encode>
                                             <file>${source-files-path}/empty-file.txt</file>
                                             <filtering>true</filtering>
                                             <placeholder>@EMPTY_FILE@</placeholder>
@@ -70,7 +70,7 @@
                                             <charset>UTF-8</charset>
                                             <encode>true</encode>
                                             <file>${source-files-path}/github-logo.webp</file>
-                                            <filtering>true</filtering>
+                                            <filtering>false</filtering>
                                             <placeholder>@GITHUB_LOGO@</placeholder>
                                         </sourceFile>
                                     </sourceFiles>

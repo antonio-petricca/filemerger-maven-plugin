@@ -254,13 +254,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         String sourceFileContent;
 
         if (sourceFileConfiguration.isEncode())  {
-            sourceFileContent = getFileContent(sourceFile, sourceCharset);
-
-            if (sourceFileConfiguration.isFiltering()) {
-                sourceFileContent = filterFileContent(sourceFileContent);
-            }
-
-            byte[] sourceFileBytes = sourceFileContent.getBytes(sourceCharset);
+            byte[] sourceFileBytes = getFileBytes(sourceFile);
 
             sourceFileContent = Base64
                 .getEncoder()
