@@ -75,7 +75,10 @@
                            <targetFiles>
                                 <targetFile>
                                     <targetFolder>${project.build.outputDirectory}</targetFolder>
-                                    <templateFiles>${assets-path}/template*</templateFiles>
+                                    <templateFilePatterns>
+                                        <templateFilePattern>${assets-path}/templates/*-1.txt</templateFilePattern>
+                                        <templateFilePattern>${assets-path}/templates/*-2.txt</templateFilePattern>
+                                    </templateFilePatterns>
 
                                     <propertiesSet>development-properties</propertiesSet>
                                     <sourceFilesSet>development-files</sourceFilesSet>

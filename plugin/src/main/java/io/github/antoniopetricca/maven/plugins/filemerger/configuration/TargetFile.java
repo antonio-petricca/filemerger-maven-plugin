@@ -5,11 +5,11 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class TargetFile extends AbstractFile {
 
     private boolean copyPermissions;
-    private Integer indentation = 0;
-    private String  propertiesSet;
-    private String  sourceFilesSet;
-    private String  targetFolder;
-    private String  templateFiles;
+    private Integer  indentation = 0;
+    private String   propertiesSet;
+    private String   sourceFilesSet;
+    private String   targetFolder;
+    private String[] templateFilePatterns;
 
     public Integer getIndentation() {
         return indentation;
@@ -31,8 +31,8 @@ public class TargetFile extends AbstractFile {
         return targetFolder;
     }
 
-    public String getTemplateFiles() {
-        return templateFiles;
+    public String[] getTemplateFilePatterns() {
+        return templateFilePatterns;
     }
 
     @Override
@@ -46,13 +46,23 @@ public class TargetFile extends AbstractFile {
 
         validate(
             ((null != targetFolder) && !targetFolder.isEmpty()),
-            "Target folder null or not found."
+            "Target folder null or empty."
         );
 
         validate(
-            ((null != templateFiles) && !templateFiles.isEmpty()),
-            "Template file null or not found."
+            ((null != templateFilePatterns ) && (templateFilePatterns.length > 0)),
+            "Template file patterns null or empty."
         );
+
+        for (String templateFilePattern : templateFilePatterns) {
+            validate(
+                ((null != templateFilePattern) && !templateFilePattern.isEmpty()),
+                String.format(
+                    "Template file pattern \"%s\" null or empty.",
+                   templateFilePattern
+                )
+            );
+        }
     }
 
 }

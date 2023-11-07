@@ -344,11 +344,11 @@ public class MavenFileMergerMojo extends AbstractMojo {
     )
         throws IOException, MavenFilteringException, MojoExecutionException
     {
-        String templateFilesGlob = targetFileConfiguration.getTemplateFiles();
+        String[] templateFilePatterns = targetFileConfiguration.getTemplateFilePatterns();
 
         log.info(String.format(
             "Merging template file(s) \"%s\"...",
-            templateFilesGlob
+            templateFilePatterns.toString()
         ));
 
         targetFileConfiguration.validate();
@@ -365,24 +365,21 @@ public class MavenFileMergerMojo extends AbstractMojo {
         directoryScanner.setBasedir(".");
         directoryScanner.setCaseSensitive(true);
         directoryScanner.setFollowSymlinks(false);
-
-        directoryScanner.setIncludes(
-            new String[] { templateFilesGlob }
-        );
+        directoryScanner.setIncludes(templateFilePatterns);
 
         directoryScanner.scan();
 
-        String[] templateFiles = directoryScanner.getIncludedFiles();
+        String[] resolvedTemplateFiles = directoryScanner.getIncludedFiles();
 
-        if ((null == templateFiles) || (0 == templateFiles.length)) {
+        if ((null == templateFilePatterns) || (0 == templateFilePatterns.length)) {
             log.warn("No template files found.");
         } else {
             boolean filtering = targetFileConfiguration.isFiltering();
 
-            for (int index = 0; index < templateFiles.length; index++) {
+            for (int index = 0; index < resolvedTemplateFiles.length; index++) {
                 mergeTargetFile(
                     targetFolder,
-                    templateFiles[index],
+                    resolvedTemplateFiles[index],
                     sourceFilesConfiguration,
                     targetCharset,
                     indentation,

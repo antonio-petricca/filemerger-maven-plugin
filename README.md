@@ -6,7 +6,7 @@ The **Tester** module is a self explanatory example:
 
 - [`tester/pom.xml`](tester/pom.xml): the plugin example configuration.
 - [`template-file.txt`](tester/src/main/assets/template-file.txt): the resource template to be merged with external files.
-- [`tester/src/main/assets/`](tester/src/main/assets): the template and the external files folder.
+- [`tester/src/main/assets/`](tester/src/main/assets): the templates and the external source files folder.
 
 ---
 

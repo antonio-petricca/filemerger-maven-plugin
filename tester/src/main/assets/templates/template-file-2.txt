@@ -1,17 +1,9 @@
+---------------
+Template file 2
+---------------
+
 Project: ${groupId}.${artifactId}
 Version: ${project.version}
-
------------
-Lorem Ipsum
------------
-
-@LOREM_IPSUM@
-
---------------
-Gregorio Samsa
---------------
-
-@GREGORIO_SAMSA@
 
 ----------
 Empty file
