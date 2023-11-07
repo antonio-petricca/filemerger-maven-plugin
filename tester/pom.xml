@@ -47,30 +47,25 @@
                                     <sourceFiles>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
-                                            <encode>false</encode>
                                             <file>${source-files-path}/lorem-ipsum.txt</file>
                                             <filtering>true</filtering>
                                             <placeholder>@LOREM_IPSUM@</placeholder>
                                         </sourceFile>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
-                                            <encode>false</encode>
                                             <file>${source-files-path}/gregorio-samsa.txt</file>
                                             <filtering>true</filtering>
                                             <placeholder>@GREGORIO_SAMSA@</placeholder>
                                         </sourceFile>
                                         <sourceFile>
                                             <charset>UTF-8</charset>
-                                            <encode>false</encode>
                                             <file>${source-files-path}/empty-file.txt</file>
                                             <filtering>true</filtering>
                                             <placeholder>@EMPTY_FILE@</placeholder>
                                         </sourceFile>
                                         <sourceFile>
-                                            <charset>UTF-8</charset>
-                                            <encode>true</encode>
+                                            <binary>true</binary>
                                             <file>${source-files-path}/github-logo.webp</file>
-                                            <filtering>false</filtering>
                                             <placeholder>@GITHUB_LOGO@</placeholder>
                                         </sourceFile>
                                     </sourceFiles>

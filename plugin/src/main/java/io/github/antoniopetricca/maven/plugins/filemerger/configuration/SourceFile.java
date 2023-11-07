@@ -6,7 +6,7 @@ import java.io.File;
 
 public class SourceFile extends AbstractFile {
 
-    private boolean encode;
+    private boolean binary;
     private File    file;
     private String  placeholder;
 
@@ -18,8 +18,8 @@ public class SourceFile extends AbstractFile {
         return placeholder;
     }
 
-    public boolean isEncode() {
-        return encode;
+    public boolean isBinary() {
+        return binary;
     }
 
     @Override
