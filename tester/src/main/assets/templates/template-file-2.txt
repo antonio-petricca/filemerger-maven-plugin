@@ -2,7 +2,7 @@
 Template file 2
 ---------------
 
-Project: ${groupId}.${artifactId}
+Project: ${external.property.artifact.id}.${external.property.group.id}
 Version: ${project.version}
 
 ----------

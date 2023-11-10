@@ -3,6 +3,7 @@ package io.github.antoniopetricca.maven.plugins.filemerger;
 // https://www.baeldung.com/maven-plugin
 
 import io.github.antoniopetricca.maven.plugins.filemerger.configuration.*;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -116,7 +117,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return targetFile;
     }
 
-    private String filterFileContent(String content)
+    private String filterContent(String content)
         throws IOException, MavenFilteringException
     {
         log.info("Filtering...");
@@ -179,8 +180,8 @@ public class MavenFileMergerMojo extends AbstractMojo {
     }
 
     private Properties getPropertiesConfiguration(String setId)
-        throws MojoExecutionException
-    {
+        throws IOException, MojoExecutionException, MavenFilteringException
+     {
         Optional<PropertiesSet> propertiesSetConfiguration =
             Arrays.stream(this.propertiesSets)
                   .filter(
@@ -197,14 +198,21 @@ public class MavenFileMergerMojo extends AbstractMojo {
             );
         }
 
-        PropertiesSet propertiesSet =
-            propertiesSetConfiguration.get();
-
+        PropertiesSet propertiesSet = propertiesSetConfiguration.get();
         propertiesSet.validate();
 
-        return propertiesSetConfiguration
+        Properties properties = propertiesSetConfiguration
             .get()
             .getProperties();
+
+        if (propertiesSet.hasPropertyFiles()) {
+            for (File file : propertiesSet.getPropertyFiles()) {
+                Properties fileProperties = loadProperties(file);
+                properties.putAll(fileProperties);
+            }
+        }
+
+        return properties;
     }
 
     private SourceFile[] getSourceFilesConfiguration(String setId)
@@ -234,6 +242,30 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return sourceFileConfigurations
             .get()
             .getSourceFiles();
+    }
+
+    private Properties loadProperties(File file)
+        throws IOException, MavenFilteringException
+    {
+        String          fileExt     = FilenameUtils.getExtension(file.getName());
+        FileInputStream inputStream = new FileInputStream(file);
+        Properties      properties  = new Properties();
+
+        if (fileExt.equalsIgnoreCase("xml"))
+        {
+            properties.loadFromXML(inputStream);
+        } else {
+            properties.load(inputStream);
+        }
+
+        for (String name : properties.stringPropertyNames()) {
+            String value = properties.getProperty(name);
+            value        = filterContent(value);
+
+            properties.setProperty(name, value);
+        }
+
+        return properties;
     }
 
     private String mergeSourceFile(
@@ -277,7 +309,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
             }
 
             if (sourceFileConfiguration.isFiltering()) {
-                sourceFileContent = filterFileContent(sourceFileContent);
+                sourceFileContent = filterContent(sourceFileContent);
             }
         }
 
@@ -328,7 +360,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         log.info("Writing target file...");
 
         if (filtering) {
-            targetFileContent = filterFileContent(targetFileContent);
+            targetFileContent = filterContent(targetFileContent);
         }
 
         Files.write(

@@ -3,7 +3,7 @@
     <option name="SCRIPT_TEXT" value="" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="/usr/bin/mvnDebug" />
-    <option name="SCRIPT_OPTIONS" value="clean install -B -X" />
+    <option name="SCRIPT_OPTIONS" value="clean install -B" />
     <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
     <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$/tester" />
     <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
