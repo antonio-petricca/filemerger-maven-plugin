@@ -2,7 +2,6 @@ package io.github.antoniopetricca.maven.plugins.filemerger.configuration;
 
 import org.apache.maven.plugin.MojoExecutionException;
 
-import java.io.File;
 import java.util.Properties;
 
 public class PropertiesSet extends AbstractSet {

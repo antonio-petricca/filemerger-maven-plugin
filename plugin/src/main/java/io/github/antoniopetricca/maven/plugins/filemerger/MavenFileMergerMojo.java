@@ -120,7 +120,9 @@ public class MavenFileMergerMojo extends AbstractMojo {
     private String filterContent(String content)
         throws IOException, MavenFilteringException
     {
-        log.info("Filtering...");
+        if (log.isDebugEnabled()) {
+            log.debug("Filtering...");
+        }
 
         StringReader sourceReader  = new StringReader(content);
 
@@ -202,16 +204,19 @@ public class MavenFileMergerMojo extends AbstractMojo {
         propertiesSet.validate();
 
         Properties properties = propertiesSetConfiguration
-            .get()
-            .getProperties();
+            .get().getProperties();
+
+        if ((null == properties) || (0 == properties.size())) {
+            properties = new Properties();
+        }
 
         if (propertiesSet.hasPropertyFiles()) {
-            String[] propertyFiles = scanForFiles(
+            String[] propertyFilePatterns = scanForFiles(
                 propertiesSet.getPropertyFilePatterns()
             );
 
-            for (String propertyFile : propertyFiles) {
-                Properties fileProperties = loadProperties(propertyFile);
+            for (String propertyFilePattern : propertyFilePatterns) {
+                Properties fileProperties = loadProperties(propertyFilePattern);
 
                 if ((null != fileProperties) && (fileProperties.size() > 0)) {
                     properties.putAll(fileProperties);

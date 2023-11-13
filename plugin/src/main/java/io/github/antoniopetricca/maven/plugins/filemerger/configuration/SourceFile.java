@@ -33,8 +33,10 @@ public class SourceFile extends AbstractFile {
 
         validate(
             ((null != file) && file.exists()),
-            "Source file null or not found."
-        );
+            String.format(
+                "Invalid source file (%s).",
+                ((null != file) ? file.toString() : "null")
+        ));
     }
 
 }
