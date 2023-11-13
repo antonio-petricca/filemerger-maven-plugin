@@ -37,10 +37,10 @@ public class MavenFileMergerMojo extends AbstractMojo {
     @Component(role = DefaultMavenReaderFilter.class)
     protected DefaultMavenReaderFilter defaultMavenReaderFilter;
 
-    @Component(role = MavenProject.class)
+    @Parameter(defaultValue = "${project}", readonly = true)
     MavenProject mavenProject;
 
-    @Component(role = MavenSession.class)
+    @Parameter(defaultValue = "${session}", readonly = true)
     MavenSession mavenSession;
 
     @Parameter(required = false)
@@ -206,8 +206,12 @@ public class MavenFileMergerMojo extends AbstractMojo {
             .getProperties();
 
         if (propertiesSet.hasPropertyFiles()) {
-            for (File file : propertiesSet.getPropertyFiles()) {
-                Properties fileProperties = loadProperties(file);
+            String[] propertyFiles = scanForFiles(
+                propertiesSet.getPropertyFilePatterns()
+            );
+
+            for (String propertyFile : propertyFiles) {
+                Properties fileProperties = loadProperties(propertyFile);
                 properties.putAll(fileProperties);
             }
         }
@@ -244,9 +248,15 @@ public class MavenFileMergerMojo extends AbstractMojo {
             .getSourceFiles();
     }
 
-    private Properties loadProperties(File file)
+    private Properties loadProperties(String propertyFile)
         throws IOException, MavenFilteringException
     {
+        log.info(String.format(
+            "Loading property file \"%s\"...",
+            propertyFile
+        ));
+
+        File            file        = new File(propertyFile);
         String          fileExt     = FilenameUtils.getExtension(file.getName());
         FileInputStream inputStream = new FileInputStream(file);
         Properties      properties  = new Properties();
@@ -378,30 +388,17 @@ public class MavenFileMergerMojo extends AbstractMojo {
     {
         String[] templateFilePatterns = targetFileConfiguration.getTemplateFilePatterns();
 
-        log.info(String.format(
-            "Merging template file(s) \"%s\"...",
-            templateFilePatterns.toString()
-        ));
+        log.info("Merging template file(s)...");
 
         targetFileConfiguration.validate();
 
-        boolean    copyPermissions  = targetFileConfiguration.isCopyPermissions();
-        String     indentation      = getIndentation(targetFileConfiguration);
-        Properties propertiesBackup = setProperties(properties);
-        Charset    targetCharset    = getCharset(targetFileConfiguration);
-        String     targetFolderName = targetFileConfiguration.getTargetFolder();
-        File       targetFolder     = new File(targetFolderName);
-
-        DirectoryScanner directoryScanner = new DirectoryScanner();
-
-        directoryScanner.setBasedir(".");
-        directoryScanner.setCaseSensitive(true);
-        directoryScanner.setFollowSymlinks(false);
-        directoryScanner.setIncludes(templateFilePatterns);
-
-        directoryScanner.scan();
-
-        String[] resolvedTemplateFiles = directoryScanner.getIncludedFiles();
+        boolean    copyPermissions       = targetFileConfiguration.isCopyPermissions();
+        String     indentation           = getIndentation(targetFileConfiguration);
+        Properties propertiesBackup      = setProperties(properties);
+        Charset    targetCharset         = getCharset(targetFileConfiguration);
+        String     targetFolderName      = targetFileConfiguration.getTargetFolder();
+        File       targetFolder          = new File(targetFolderName);
+        String[]   resolvedTemplateFiles = scanForFiles(templateFilePatterns);
 
         if ((null == templateFilePatterns) || (0 == templateFilePatterns.length)) {
             log.warn("No template files found.");
@@ -422,6 +419,19 @@ public class MavenFileMergerMojo extends AbstractMojo {
         }
 
         setProperties(propertiesBackup);
+    }
+
+    private String[] scanForFiles(String[] filePatterns) {
+        DirectoryScanner directoryScanner = new DirectoryScanner();
+
+        directoryScanner.setBasedir(".");
+        directoryScanner.setCaseSensitive(true);
+        directoryScanner.setFollowSymlinks(false);
+        directoryScanner.setIncludes(filePatterns);
+
+        directoryScanner.scan();
+
+        return directoryScanner.getIncludedFiles();
     }
 
     private Properties setProperties(Properties newProperties) {

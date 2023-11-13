@@ -41,10 +41,10 @@
                                         <plugin.tester.environment>development</plugin.tester.environment>
                                     </properties>
 
-                                    <propertyFiles>
-                                        <propertyFile>${property-files-path}/external.properties</propertyFile>
-                                        <propertyFile>${property-files-path}/external.xml</propertyFile>
-                                    </propertyFiles>
+                                    <propertyFilePatterns>
+                                        <propertyFilePattern>${property-files-path}/*.properties</propertyFilePattern>
+                                        <propertyFilePattern>${property-files-path}/*.xml</propertyFilePattern>
+                                    </propertyFilePatterns>
 
                                 </propertiesSet>
                             </propertiesSets>

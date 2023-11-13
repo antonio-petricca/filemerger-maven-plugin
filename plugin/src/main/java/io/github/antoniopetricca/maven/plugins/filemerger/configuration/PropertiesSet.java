@@ -8,18 +8,18 @@ import java.util.Properties;
 public class PropertiesSet extends AbstractSet {
 
     private Properties properties;
-    private File[]     propertyFiles;
+    private String[]   propertyFilePatterns;
 
     public Properties getProperties() {
         return properties;
     }
 
-    public File[] getPropertyFiles() {
-        return propertyFiles;
+    public String[] getPropertyFilePatterns() {
+        return propertyFilePatterns;
     }
 
     public boolean hasPropertyFiles() {
-        return ((null != propertyFiles) && (propertyFiles.length > 0));
+        return ((null != propertyFilePatterns ) && ( propertyFilePatterns.length > 0));
     }
 
     @Override
@@ -28,13 +28,13 @@ public class PropertiesSet extends AbstractSet {
     {
         super.validate();
 
-        if ((null != propertyFiles) && (propertyFiles.length > 0)) {
-            for (File propertyFile : propertyFiles) {
+        if ((null != propertyFilePatterns ) && ( propertyFilePatterns.length > 0)) {
+            for (String propertyFilePattern : propertyFilePatterns) {
                 validate(
-                    (propertyFile.exists() && propertyFile.isFile()),
+                    ((null != propertyFilePattern) && !propertyFilePattern.isEmpty()),
                     String.format(
-                        "File \"%s\" not found",
-                        propertyFile.getAbsolutePath()
+                        "Property file pattern \"%s\" null or empty.",
+                        propertyFilePattern
                     )
                 );
             }
