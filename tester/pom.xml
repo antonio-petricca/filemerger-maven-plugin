@@ -9,7 +9,7 @@
 
     <groupId>io.github.antonio-petricca</groupId>
     <artifactId>filemerger-maven-plugin-tester</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.2</version>
 
     <packaging>jar</packaging>
 
