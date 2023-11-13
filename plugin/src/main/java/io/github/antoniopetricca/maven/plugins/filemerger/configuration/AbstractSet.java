@@ -9,6 +9,7 @@ public abstract class AbstractSet extends AbstractValidObject {
     public String getId() {
         return id;
     }@Override
+
     public void validate()
         throws MojoExecutionException
     {

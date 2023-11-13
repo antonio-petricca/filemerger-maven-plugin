@@ -212,7 +212,10 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
             for (String propertyFile : propertyFiles) {
                 Properties fileProperties = loadProperties(propertyFile);
-                properties.putAll(fileProperties);
+
+                if ((null != fileProperties) && (fileProperties.size() > 0)) {
+                    properties.putAll(fileProperties);
+                }
             }
         }
 
