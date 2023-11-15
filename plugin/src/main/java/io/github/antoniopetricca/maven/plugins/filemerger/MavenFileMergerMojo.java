@@ -402,7 +402,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
         boolean    copyPermissions       = targetFileConfiguration.isCopyPermissions();
         String     indentation           = getIndentation(targetFileConfiguration);
-        Properties propertiesBackup      = setProperties(properties);
+        Properties propertiesBackup      = setProperties(properties, false);
         Charset    targetCharset         = getCharset(targetFileConfiguration);
         String     targetFolderName      = targetFileConfiguration.getTargetFolder();
         File       targetFolder          = new File(targetFolderName);
@@ -426,7 +426,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
             }
         }
 
-        setProperties(propertiesBackup);
+        setProperties(propertiesBackup, true);
     }
 
     private String[] scanForFiles(String[] filePatterns) {
@@ -442,20 +442,16 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return directoryScanner.getIncludedFiles();
     }
 
-    private Properties setProperties(Properties newProperties) {
+    private Properties setProperties(Properties newProperties, boolean replace) {
         Properties currentProperties = mavenProject.getProperties();
         Properties backupProperties  = (Properties)currentProperties.clone();
 
         if (null != newProperties) {
-            newProperties
-                .entrySet()
-                .forEach(
-                    property ->
-                        currentProperties.setProperty(
-                            (String)property.getKey(),
-                            (String)property.getValue()
-                        )
-                );
+            if (replace) {
+                currentProperties.clear();
+            }
+
+            currentProperties.putAll(newProperties);
         }
 
         return backupProperties;
