@@ -5,6 +5,7 @@ package io.github.antoniopetricca.maven.plugins.filemerger;
 import io.github.antoniopetricca.maven.plugins.filemerger.configuration.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -108,10 +109,14 @@ public class MavenFileMergerMojo extends AbstractMojo {
         if (copyPermissions) {
             log.info("Applying file permissions...");
 
-            copyFilePermissions(
-                templateFile.toPath(),
-                targetFile.toPath()
-            );
+            if (SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_LINUX) {
+                copyFilePermissions(
+                    templateFile.toPath(),
+                    targetFile.toPath()
+                );
+            } else {
+                log.warn("File permission not applied because OS is not a unix OS.");
+            }
         }
 
         return targetFile;
