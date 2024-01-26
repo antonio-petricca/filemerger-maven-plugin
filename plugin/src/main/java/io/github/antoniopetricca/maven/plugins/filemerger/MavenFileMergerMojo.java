@@ -21,6 +21,7 @@ import org.codehaus.plexus.util.DirectoryScanner;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
@@ -109,13 +110,18 @@ public class MavenFileMergerMojo extends AbstractMojo {
         if (copyPermissions) {
             log.info("Applying file permissions...");
 
-            if (SystemUtils.IS_OS_LINUX || SystemUtils.IS_OS_LINUX) {
+            boolean isPosix = FileSystems
+                .getDefault()
+                .supportedFileAttributeViews()
+                .contains("posix");
+
+            if (isPosix) {
                 copyFilePermissions(
                     templateFile.toPath(),
                     targetFile.toPath()
                 );
             } else {
-                log.warn("File permission not applied because OS is not a unix OS.");
+                log.warn("File permission not applied because OS is not a posix compliant OS.");
             }
         }
 

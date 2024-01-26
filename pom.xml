@@ -10,7 +10,7 @@
 
     <groupId>io.github.antonio-petricca</groupId>
     <artifactId>filemerger-maven-plugin-pom</artifactId>
-    <version>1.4.4</version>
+    <version>1.4.5</version>
 
     <packaging>pom</packaging>
 
