@@ -45,7 +45,7 @@
 
     <groupId>io.github.antonio-petricca</groupId>
     <artifactId>filemerger-maven-plugin</artifactId>
-    <version>1.4.7</version>
+    <version>1.5.0</version>
 
     <packaging>maven-plugin</packaging>
 

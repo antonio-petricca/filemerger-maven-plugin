@@ -5,7 +5,6 @@ package io.github.antoniopetricca.maven.plugins.filemerger;
 import io.github.antoniopetricca.maven.plugins.filemerger.configuration.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -40,10 +39,10 @@ public class MavenFileMergerMojo extends AbstractMojo {
     protected DefaultMavenReaderFilter defaultMavenReaderFilter;
 
     @Parameter(defaultValue = "${project}", readonly = true)
-    MavenProject mavenProject;
+    private MavenProject mavenProject;
 
     @Parameter(defaultValue = "${session}", readonly = true)
-    MavenSession mavenSession;
+    private MavenSession mavenSession;
 
     @Parameter(required = false)
     private PropertiesSet[] propertiesSets;
@@ -57,7 +56,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
     @Parameter(required = true)
     private TargetFile[] targetFiles;
 
-    String convertReaderToString(Reader reader) throws IOException {
+    private String convertReaderToString(Reader reader) throws IOException {
         StringWriter writer = new StringWriter();
         char[]       buffer = new char[8192];
 
@@ -192,7 +191,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         return indentationString;
     }
 
-    private Properties getPropertiesConfiguration(String setId)
+    private Properties getPropertiesConfiguration(String setId, String projectBaseDir)
         throws IOException, MojoExecutionException, MavenFilteringException
      {
         Optional<PropertiesSet> propertiesSetConfiguration =
@@ -223,6 +222,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
         if (propertiesSet.hasPropertyFiles()) {
             String[] propertyFilePatterns = scanForFiles(
+                projectBaseDir,
                 propertiesSet.getPropertyFilePatterns()
             );
 
@@ -401,7 +401,8 @@ public class MavenFileMergerMojo extends AbstractMojo {
     private void mergeTargetFile(
         TargetFile   targetFileConfiguration,
         Properties   properties,
-        SourceFile[] sourceFilesConfiguration
+        SourceFile[] sourceFilesConfiguration,
+        String       projectBaseDir
     )
         throws IOException, MavenFilteringException, MojoExecutionException
     {
@@ -417,7 +418,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
         Charset    targetCharset         = getCharset(targetFileConfiguration);
         String     targetFolderName      = targetFileConfiguration.getTargetFolder();
         File       targetFolder          = new File(targetFolderName);
-        String[]   resolvedTemplateFiles = scanForFiles(templateFilePatterns);
+        String[]   resolvedTemplateFiles = scanForFiles(projectBaseDir, templateFilePatterns);
 
         if ((null == templateFilePatterns) || (0 == templateFilePatterns.length)) {
             log.warn("No template files found.");
@@ -450,10 +451,10 @@ public class MavenFileMergerMojo extends AbstractMojo {
         setProperties(propertiesBackup, true);
     }
 
-    private String[] scanForFiles(String[] filePatterns) {
+    private String[] scanForFiles(String projectBaseDir, String[] filePatterns) {
         DirectoryScanner directoryScanner = new DirectoryScanner();
 
-        directoryScanner.setBasedir(".");
+        directoryScanner.setBasedir(projectBaseDir);
         directoryScanner.setCaseSensitive(true);
         directoryScanner.setFollowSymlinks(false);
         directoryScanner.setIncludes(filePatterns);
@@ -487,7 +488,14 @@ public class MavenFileMergerMojo extends AbstractMojo {
             return;
         }
 
-        log.info("Merging...");
+        String projectBaseDir = mavenProject
+            .getBasedir()
+            .getAbsolutePath();
+
+        log.info(String.format(
+            "Merging from project base dir \"%s\"...",
+            projectBaseDir
+        ));
 
         for (TargetFile targetFile : targetFiles) {
             try {
@@ -495,7 +503,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
                 String     propertiesSet = targetFile.getPropertiesSet();
 
                 if ((null != propertiesSet) && !propertiesSet.isEmpty()) {
-                    properties = getPropertiesConfiguration(propertiesSet);
+                    properties = getPropertiesConfiguration(propertiesSet, projectBaseDir);
                 }
 
                 SourceFile[] sourceFiles    = null;
@@ -505,7 +513,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
                     sourceFiles = getSourceFilesConfiguration(sourceFilesSet);
                 }
 
-                mergeTargetFile(targetFile, properties, sourceFiles);
+                mergeTargetFile(targetFile, properties, sourceFiles, projectBaseDir);
             } catch(IOException | MavenFilteringException exception) {
                 throw new MojoExecutionException(exception);
             }
