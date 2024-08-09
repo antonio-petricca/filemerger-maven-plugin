@@ -421,7 +421,17 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
         if ((null == templateFilePatterns) || (0 == templateFilePatterns.length)) {
             log.warn("No template files found.");
+        } else if ((null == resolvedTemplateFiles) || (0 == resolvedTemplateFiles.length)) {
+            log.warn(String.format(
+                "No resolved template files found for template file patterns:\n\n%s\n",
+                Arrays.toString(templateFilePatterns)
+            ));
         } else {
+            log.info(String.format(
+                "Processing resolved template files:\n\n%s\n",
+                Arrays.toString(templateFilePatterns)
+            ));
+
             boolean filtering = targetFileConfiguration.isFiltering();
 
             for (int index = 0; index < resolvedTemplateFiles.length; index++) {
