@@ -1,7 +1,5 @@
 package io.github.antoniopetricca.maven.plugins.filemerger;
 
-// https://www.baeldung.com/maven-plugin
-
 import io.github.antoniopetricca.maven.plugins.filemerger.configuration.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -515,7 +513,10 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
                 mergeTargetFile(targetFile, properties, sourceFiles, projectBaseDir);
             } catch(IOException | MavenFilteringException exception) {
-                throw new MojoExecutionException(exception);
+                throw new MojoExecutionException(
+                    exception.getMessage(),
+                    exception
+                );
             }
         }
 
