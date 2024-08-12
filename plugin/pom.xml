@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+    https://s01.oss.sonatype.org/#nexus-search;quick~filemerger
+
     https://maven.apache.org/guides/plugin/guide-java-plugin-development.html
     https://central.sonatype.org/publish/#individual-projects-open-source-software-repository-hosting-ossrh
     https://central.sonatype.org/publish/publish-maven/#deployment
