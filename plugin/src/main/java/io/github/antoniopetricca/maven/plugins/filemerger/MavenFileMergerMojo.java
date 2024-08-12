@@ -225,7 +225,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
             );
 
             for (String propertyFilePattern : propertyFilePatterns) {
-                Properties fileProperties = loadProperties(propertyFilePattern);
+                Properties fileProperties = loadProperties(propertyFilePattern, projectBaseDir);
 
                 if ((null != fileProperties) && (fileProperties.size() > 0)) {
                     properties.putAll(fileProperties);
@@ -265,9 +265,11 @@ public class MavenFileMergerMojo extends AbstractMojo {
             .getSourceFiles();
     }
 
-    private Properties loadProperties(String propertyFile)
+    private Properties loadProperties(String propertyFile, String projectBaseDir)
         throws IOException, MavenFilteringException
     {
+        propertyFile = FilenameUtils.concat(projectBaseDir, propertyFile);
+
         log.info(String.format(
             "Loading property file \"%s\"...",
             propertyFile
@@ -414,7 +416,12 @@ public class MavenFileMergerMojo extends AbstractMojo {
         String     indentation           = getIndentation(targetFileConfiguration);
         Properties propertiesBackup      = setProperties(properties, false);
         Charset    targetCharset         = getCharset(targetFileConfiguration);
-        String     targetFolderName      = targetFileConfiguration.getTargetFolder();
+
+        String     targetFolderName      = FilenameUtils.concat(
+            projectBaseDir,
+            targetFileConfiguration.getTargetFolder()
+        );
+
         File       targetFolder          = new File(targetFolderName);
         String[]   resolvedTemplateFiles = scanForFiles(projectBaseDir, templateFilePatterns);
 
@@ -434,9 +441,14 @@ public class MavenFileMergerMojo extends AbstractMojo {
             boolean filtering = targetFileConfiguration.isFiltering();
 
             for (int index = 0; index < resolvedTemplateFiles.length; index++) {
+                String resolvedTemplateFileName = FilenameUtils.concat(
+                    projectBaseDir,
+                    resolvedTemplateFiles[index]
+                );
+
                 mergeTargetFile(
                     targetFolder,
-                    resolvedTemplateFiles[index],
+                    resolvedTemplateFileName,
                     sourceFilesConfiguration,
                     targetCharset,
                     indentation,
