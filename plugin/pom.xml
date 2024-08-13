@@ -2,10 +2,13 @@
 
 <!--
     https://s01.oss.sonatype.org/#nexus-search;quick~filemerger
-    https://central.sonatype.org/publish/generate-token/
+    https://central.sonatype.com/artifact/io.github.antonio-petricca/filemerger-maven-plugin/versions
+    https://repo.maven.apache.org/maven2/io/github/antonio-petricca/filemerger-maven-plugin/
+    https://mvnrepository.com/artifact/io.github.antonio-petricca/filemerger-maven-plugin
 
     https://maven.apache.org/guides/plugin/guide-java-plugin-development.html
     https://central.sonatype.org/publish/#individual-projects-open-source-software-repository-hosting-ossrh
+    https://central.sonatype.org/publish/generate-token/
     https://central.sonatype.org/publish/publish-maven/#deployment
     https://central.sonatype.org/publish/requirements/#sufficient-metadata
     https://central.sonatype.org/publish/requirements/gpg/#listing-keys
