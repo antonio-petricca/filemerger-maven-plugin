@@ -4,9 +4,10 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 public class TargetFile extends AbstractFile {
 
-    private boolean  copyPermissions;
-    private Integer  indentation = 0;
+    private boolean  copyPermissions = false;
+    private Integer  indentation     = 0;
     private String   propertiesSet;
+    private boolean  skipIfRunningInContainer;
     private String   sourceFilesSet;
     private String   targetFolder;
     private String[] templateFilePatterns;
@@ -21,6 +22,10 @@ public class TargetFile extends AbstractFile {
 
     public String getPropertiesSet() {
         return propertiesSet;
+    }
+
+    public boolean getSkipIfRunningInContainer() {
+        return skipIfRunningInContainer;
     }
 
     public String getSourceFilesSet() {
