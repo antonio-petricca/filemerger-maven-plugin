@@ -4,7 +4,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 public class TargetFile extends AbstractFile {
 
-    private boolean copyPermissions;
+    private boolean  copyPermissions;
     private Integer  indentation = 0;
     private String   propertiesSet;
     private String   sourceFilesSet;
