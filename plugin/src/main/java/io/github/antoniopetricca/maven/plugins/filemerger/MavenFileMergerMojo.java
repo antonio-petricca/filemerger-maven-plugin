@@ -31,7 +31,8 @@ import java.util.stream.Collectors;
 )
 public class MavenFileMergerMojo extends AbstractMojo {
 
-    private final Log log = this.getLog();
+    private final Log     log                      = this.getLog();
+    private       boolean isRunningInsideContainer = false;
 
     @Component(role = DefaultMavenReaderFilter.class)
     protected DefaultMavenReaderFilter defaultMavenReaderFilter;
@@ -53,6 +54,38 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
     @Parameter(required = true)
     private TargetFile[] targetFiles;
+
+    private boolean checkIsRunningInsideContainer() {
+        String os = System.getProperty("os.name").toLowerCase();
+
+        if (os.contains("win")) {
+            return System.getenv("CONTAINER") != null;
+        } else {
+            File dockerEnv = new File("/.dockerenv");
+
+            if (dockerEnv.exists()) {
+                return true;
+            }
+
+            try (BufferedReader br = new BufferedReader(
+                new FileReader("/proc/1/cgroup")
+            )) {
+
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    if (line.contains("docker") || line.contains("kubepods")) {
+                        return true;
+                    }
+                }
+
+            } catch (IOException e) {
+                // Ignore exception
+            }
+
+            return false;
+        }
+    }
 
     private String convertReaderToString(Reader reader) throws IOException {
         StringWriter writer = new StringWriter();
@@ -498,6 +531,8 @@ public class MavenFileMergerMojo extends AbstractMojo {
             return;
         }
 
+        isRunningInsideContainer = checkIsRunningInsideContainer();
+
         String projectBaseDir = mavenProject
             .getBasedir()
             .getAbsolutePath();
@@ -509,6 +544,11 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
         for (TargetFile targetFile : targetFiles) {
             try {
+                if (targetFile.getSkipIfRunningInContainer() && isRunningInsideContainer) {
+                    log.info("Execution skipped because running inside container.");
+                    continue;
+                }
+
                 Properties properties    = null;
                 String     propertiesSet = targetFile.getPropertiesSet();
 

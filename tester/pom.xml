@@ -97,6 +97,7 @@
                                     <copyPermissions>true</copyPermissions>
                                     <filtering>true</filtering>
                                     <indentation>4</indentation>
+                                    <skipIfRunningInContainer>true</skipIfRunningInContainer>
                                 </targetFile>
                            </targetFiles>
                         </configuration>
