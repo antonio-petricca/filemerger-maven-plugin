@@ -26,3 +26,4 @@ replay_pid*
 # Custom
 .idea/
 target/
+*.versionsBackup
