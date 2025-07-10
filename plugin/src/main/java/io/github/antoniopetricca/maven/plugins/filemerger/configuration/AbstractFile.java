@@ -4,11 +4,16 @@ import java.nio.charset.StandardCharsets;
 
 public abstract class AbstractFile extends AbstractValidObject {
 
+    private boolean binary;
     private String  charset   = StandardCharsets.UTF_8.name();
     private boolean filtering = false;
 
     public String getCharset() {
         return charset;
+    }
+
+    public boolean isBinary() {
+        return binary;
     }
 
     public boolean isFiltering() {
