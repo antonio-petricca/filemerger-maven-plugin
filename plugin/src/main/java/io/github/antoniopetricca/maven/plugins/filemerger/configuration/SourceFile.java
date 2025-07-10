@@ -6,6 +6,7 @@ import java.io.File;
 
 public class SourceFile extends AbstractFile {
 
+    private boolean binary;
     private File    file;
     private String  placeholder;
 
@@ -15,6 +16,10 @@ public class SourceFile extends AbstractFile {
 
     public String getPlaceholder() {
         return placeholder;
+    }
+
+    public boolean isBinary() {
+        return binary;
     }
 
     @Override
