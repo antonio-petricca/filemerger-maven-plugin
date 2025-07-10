@@ -407,28 +407,38 @@ public class MavenFileMergerMojo extends AbstractMojo {
             ));
         }
 
-        File   targetFile        = ensureTargetFile(targetFolder, templateFile, copyPermissions);
-        String targetFileContent = getFileContent(templateFile, targetCharset);
-
-        if (null != sourceFilesConfiguration) {
-            for (SourceFile sourceFile : sourceFilesConfiguration) {
-                targetFileContent = mergeSourceFile(sourceFile,
-                    targetFileContent,
-                    indentation
-                );
-            }
-        }
-
-        log.info("Writing target file...");
+        File targetFile = ensureTargetFile(targetFolder, templateFile, copyPermissions);
 
         if (filtering) {
-            targetFileContent = filterContent(targetFileContent);
-        }
+            log.info("Writing filtered target file...");
 
-        Files.write(
-            targetFile.toPath(),
-            targetFileContent.getBytes(targetCharset)
-        );
+            String targetFileContent = getFileContent(templateFile, targetCharset);
+
+            if (null != sourceFilesConfiguration) {
+                for (SourceFile sourceFile : sourceFilesConfiguration) {
+                    targetFileContent = mergeSourceFile(sourceFile,
+                        targetFileContent,
+                        indentation
+                    );
+                }
+            }
+
+            targetFileContent = filterContent(targetFileContent);
+
+            Files.write(
+                targetFile.toPath(),
+                targetFileContent.getBytes(targetCharset)
+            );
+        } else {
+            log.info("Writing binary (unfiltered) target file...");
+
+            byte[] templateFileBytes = getFileBytes(templateFile);
+
+            Files.write(
+                targetFile.toPath(),
+                templateFileBytes
+            );
+        }
     }
 
     private void mergeTargetFile(
