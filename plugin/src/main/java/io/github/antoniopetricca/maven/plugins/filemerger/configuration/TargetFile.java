@@ -8,6 +8,7 @@ public class TargetFile extends AbstractFile {
     private Integer  indentation     = 0;
     private String   propertiesSet;
     private boolean  skipIfRunningInContainer;
+    private boolean  nullifyUnresolvedProperties = false;
     private String   sourceFilesSet;
     private String   targetFolder;
     private String[] templateFilePatterns;
@@ -18,6 +19,10 @@ public class TargetFile extends AbstractFile {
 
     public boolean isCopyPermissions() {
         return copyPermissions;
+    }
+
+    public Boolean getNullifyUnresolvedProperties() {
+        return nullifyUnresolvedProperties;
     }
 
     public String getPropertiesSet() {

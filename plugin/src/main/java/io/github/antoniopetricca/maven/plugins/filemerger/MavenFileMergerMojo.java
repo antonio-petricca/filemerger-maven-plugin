@@ -55,9 +55,6 @@ public class MavenFileMergerMojo extends AbstractMojo {
     @Parameter(required = true)
     private TargetFile[] targetFiles;
 
-    @Parameter(defaultValue = "false", required = false)
-    private Boolean nullifyUnresolvedProperties;
-
     private boolean checkIsRunningInsideContainer() {
         String os = System.getProperty("os.name").toLowerCase();
 
@@ -391,7 +388,8 @@ public class MavenFileMergerMojo extends AbstractMojo {
         Charset      targetCharset,
         String       indentation,
         boolean      filtering,
-        boolean      copyPermissions
+        boolean      copyPermissions,
+        boolean      nullifyUnresolvedProperties
     )
         throws IOException, MavenFilteringException, MojoExecutionException
     {
@@ -465,12 +463,13 @@ public class MavenFileMergerMojo extends AbstractMojo {
 
         targetFileConfiguration.validate();
 
-        boolean    copyPermissions       = targetFileConfiguration.isCopyPermissions();
-        String     indentation           = getIndentation(targetFileConfiguration);
-        Properties propertiesBackup      = setProperties(properties, false);
-        Charset    targetCharset         = getCharset(targetFileConfiguration);
+        boolean    copyPermissions             = targetFileConfiguration.isCopyPermissions();
+        String     indentation                 = getIndentation(targetFileConfiguration);
+        boolean    nullifyUnresolvedProperties = targetFileConfiguration.getNullifyUnresolvedProperties();
+        Properties propertiesBackup            = setProperties(properties, false);
+        Charset    targetCharset               = getCharset(targetFileConfiguration);
 
-        String     targetFolderName      = FilenameUtils.concat(
+        String     targetFolderName            = FilenameUtils.concat(
             projectBaseDir,
             targetFileConfiguration.getTargetFolder()
         );
@@ -506,7 +505,8 @@ public class MavenFileMergerMojo extends AbstractMojo {
                     targetCharset,
                     indentation,
                     filtering,
-                    copyPermissions
+                    copyPermissions,
+                    nullifyUnresolvedProperties
                 );
             }
         }

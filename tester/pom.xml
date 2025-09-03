@@ -33,7 +33,6 @@
                         <configuration>
                             <!-- Paths must be relative to ${project.basedir} -->
 
-                            <nullifyUnresolvedProperties>true</nullifyUnresolvedProperties>
                             <skip>false</skip>
 
                             <propertiesSets>
@@ -97,6 +96,7 @@
                                     <copyPermissions>true</copyPermissions>
                                     <filtering>true</filtering>
                                     <indentation>4</indentation>
+                                    <nullifyUnresolvedProperties>true</nullifyUnresolvedProperties>
                                     <skipIfRunningInContainer>true</skipIfRunningInContainer>
                                 </targetFile>
                            </targetFiles>
