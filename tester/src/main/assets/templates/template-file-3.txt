@@ -1,0 +1,8 @@
+---------------
+Template file 3
+---------------
+
+Project: ${external.property.artifact.id}.${external.property.group.id}
+Version: ${project.version}
+
+Not resolved property: "${not.resolved.property}"

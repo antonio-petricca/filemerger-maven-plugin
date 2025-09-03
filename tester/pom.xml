@@ -33,6 +33,7 @@
                         <configuration>
                             <!-- Paths must be relative to ${project.basedir} -->
 
+                            <unresolvedPropertiesFallbackValue>NOT_RESOLVED_PROPERTY_VALUE</unresolvedPropertiesFallbackValue>
                             <skip>false</skip>
 
                             <propertiesSets>
@@ -86,8 +87,7 @@
                                 <targetFile>
                                     <targetFolder>${project.build.outputDirectory}</targetFolder>
                                     <templateFilePatterns>
-                                        <templateFilePattern>${assets-path}/templates/*-1.txt</templateFilePattern>
-                                        <templateFilePattern>${assets-path}/templates/*-2.txt</templateFilePattern>
+                                        <templateFilePattern>${assets-path}/templates/*</templateFilePattern>
                                     </templateFilePatterns>
 
                                     <propertiesSet>development-properties</propertiesSet>
