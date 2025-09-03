@@ -55,8 +55,8 @@ public class MavenFileMergerMojo extends AbstractMojo {
     @Parameter(required = true)
     private TargetFile[] targetFiles;
 
-    @Parameter(required = false)
-    private String unresolvedPropertiesFallbackValue = null;
+    @Parameter(defaultValue = "false", required = false)
+    private Boolean nullifyUnresolvedProperties;
 
     private boolean checkIsRunningInsideContainer() {
         String os = System.getProperty("os.name").toLowerCase();
@@ -179,19 +179,7 @@ public class MavenFileMergerMojo extends AbstractMojo {
             mavenSession
         );
 
-        String filteredContent = convertReaderToString(targetReader);
-
-        if (
-               (unresolvedPropertiesFallbackValue != null)
-            && !unresolvedPropertiesFallbackValue.isEmpty()
-        ) {
-            filteredContent = filteredContent.replaceAll(
-                "\\$\\{[^}]+\\}",
-                unresolvedPropertiesFallbackValue
-            );
-        }
-
-        return filteredContent;
+        return convertReaderToString(targetReader);
     }
 
     private Charset getCharset(AbstractFile fileConfiguration) {
@@ -439,6 +427,13 @@ public class MavenFileMergerMojo extends AbstractMojo {
             }
 
             targetFileContent = filterContent(targetFileContent);
+
+            if (nullifyUnresolvedProperties) {
+                targetFileContent = targetFileContent.replaceAll(
+                    "\\$\\{[^}]+\\}",
+                    ""
+                );
+            }
 
             Files.write(
                 targetFile.toPath(),

@@ -33,7 +33,7 @@
                         <configuration>
                             <!-- Paths must be relative to ${project.basedir} -->
 
-                            <unresolvedPropertiesFallbackValue>NOT_RESOLVED_PROPERTY_VALUE</unresolvedPropertiesFallbackValue>
+                            <nullifyUnresolvedProperties>true</nullifyUnresolvedProperties>
                             <skip>false</skip>
 
                             <propertiesSets>
